@@ -6,7 +6,7 @@ class AuthProvider extends ChangeNotifier {
   bool get isAuthenticated => _isAuthenticated;
 
   bool login(String username, String password) {
-    if (username == 'admin' && password == '123456') {
+    if (username == 'admin@hazard.com' && password == '123456') {
       _isAuthenticated = true;
       notifyListeners();
       return true;

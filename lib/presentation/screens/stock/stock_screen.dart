@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hazard/presentation/widgets/sideBar.dart';
 
 class StockScreen extends StatefulWidget {
   const StockScreen({super.key});
@@ -10,6 +11,6 @@ class StockScreen extends StatefulWidget {
 class _StockScreenState extends State<StockScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(body: SideBar(),);
   }
 }
