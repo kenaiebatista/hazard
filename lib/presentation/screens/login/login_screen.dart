@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hazard/presentation/widgets/cardForm.dart';
-import 'package:hazard/presentation/widgets/leftPanel.dart';
+import 'package:hazard/presentation/widgets/card_form.dart';
+import 'package:hazard/presentation/widgets/left_panel.dart';
 import 'package:provider/provider.dart';
 
 class StateChange extends ChangeNotifier {
@@ -33,7 +33,9 @@ class LoginScreen extends StatelessWidget {
                       builder: (context, constraints) {
                         return SingleChildScrollView(
                           child: ConstrainedBox(
-                            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                            constraints: BoxConstraints(
+                              minHeight: constraints.maxHeight,
+                            ),
                             child: Center(child: CardForm()),
                           ),
                         );
