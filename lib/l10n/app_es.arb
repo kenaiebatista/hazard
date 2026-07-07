@@ -1,0 +1,70 @@
+{
+  "@@locale": "es",
+
+  "loginWelcome": "¡Bienvenido!",
+  "loginRegisterTitle": "Regístrate",
+  "loginFieldName": "Nombre",
+  "loginFieldEmail": "Correo",
+  "loginFieldPassword": "Contraseña",
+  "loginFieldConfirmPassword": "Confirmar Contraseña",
+  "loginButtonSignIn": "Iniciar sesión",
+  "loginButtonRegister": "Registrarse",
+  "loginLinkHaveAccount": "Ya tengo una cuenta",
+  "loginLinkRegister": "Regístrate",
+  "loginErrorInvalidCredentials": "Correo o contraseña incorrectos.",
+  "loginErrorEmailAlreadyRegistered": "Este correo ya está registrado.",
+  "loginValidatorNameRequired": "Ingresa tu nombre",
+  "loginValidatorEmailRequired": "Ingresa tu correo",
+  "loginValidatorEmailInvalid": "Correo inválido",
+  "loginValidatorPasswordRequired": "Ingresa tu contraseña",
+  "loginValidatorPasswordMinLength": "Mínimo 6 caracteres",
+  "loginValidatorConfirmPasswordRequired": "Confirma tu contraseña",
+  "loginValidatorPasswordMismatch": "Las contraseñas no coinciden",
+
+  "navList": "Lista",
+  "navManagement": "Gestión",
+  "navStock": "Inventario",
+  "navProduct": "Producto",
+  "navCategory": "Categoría",
+
+  "warehouseTitle": "Almacén",
+  "warehouseEmpty": "No hay almacenes registrados.",
+  "warehouseCapacity": "Capacidad: {value}",
+  "@warehouseCapacity": {
+    "placeholders": {
+      "value": { "type": "int" }
+    }
+  },
+  "warehouseManageTitle": "Gestionar Almacén",
+
+  "sidebarModuleWarehouse": "Almacén",
+  "sidebarModuleCategory": "Categoría",
+
+  "categoryTitle": "Categoría",
+  "categoryEmpty": "No hay categorías registradas.",
+
+  "productTitle": "Producto",
+  "productEmpty": "No hay productos registrados.",
+
+  "stockTitle": "Inventario",
+  "stockEmpty": "No hay productos registrados.",
+  "stockSku": "SKU: {value}",
+  "@stockSku": {
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "stockWarehouse": "Almacén: {value}",
+  "@stockWarehouse": {
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "stockWarehouseUnknown": "No asignado",
+  "stockAmount": "Cant: {value}",
+  "@stockAmount": {
+    "placeholders": {
+      "value": { "type": "int" }
+    }
+  }
+}

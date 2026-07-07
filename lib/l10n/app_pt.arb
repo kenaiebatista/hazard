@@ -1,0 +1,70 @@
+{
+  "@@locale": "pt",
+
+  "loginWelcome": "Bem-vindo!",
+  "loginRegisterTitle": "Cadastre-se",
+  "loginFieldName": "Nome",
+  "loginFieldEmail": "Email",
+  "loginFieldPassword": "Senha",
+  "loginFieldConfirmPassword": "Confirmar Senha",
+  "loginButtonSignIn": "Entrar",
+  "loginButtonRegister": "Cadastrar",
+  "loginLinkHaveAccount": "Já tenho uma conta",
+  "loginLinkRegister": "Cadastre-se",
+  "loginErrorInvalidCredentials": "Email ou senha incorretos.",
+  "loginErrorEmailAlreadyRegistered": "Este email já está cadastrado.",
+  "loginValidatorNameRequired": "Informe o nome",
+  "loginValidatorEmailRequired": "Informe o email",
+  "loginValidatorEmailInvalid": "Email inválido",
+  "loginValidatorPasswordRequired": "Informe a senha",
+  "loginValidatorPasswordMinLength": "Mínimo 6 caracteres",
+  "loginValidatorConfirmPasswordRequired": "Confirme a senha",
+  "loginValidatorPasswordMismatch": "Senhas não coincidem",
+
+  "navList": "Lista",
+  "navManagement": "Gestão",
+  "navStock": "Estoque",
+  "navProduct": "Produto",
+  "navCategory": "Categoria",
+
+  "warehouseTitle": "Armazém",
+  "warehouseEmpty": "Nenhum armazém cadastrado.",
+  "warehouseCapacity": "Capacidade: {value}",
+  "@warehouseCapacity": {
+    "placeholders": {
+      "value": { "type": "int" }
+    }
+  },
+  "warehouseManageTitle": "Gerenciar Armazém",
+
+  "sidebarModuleWarehouse": "Armazém",
+  "sidebarModuleCategory": "Categoria",
+
+  "categoryTitle": "Categoria",
+  "categoryEmpty": "Nenhuma categoria cadastrada.",
+
+  "productTitle": "Produto",
+  "productEmpty": "Nenhum produto cadastrado.",
+
+  "stockTitle": "Estoque",
+  "stockEmpty": "Nenhum produto cadastrado.",
+  "stockSku": "SKU: {value}",
+  "@stockSku": {
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "stockWarehouse": "Galpão: {value}",
+  "@stockWarehouse": {
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "stockWarehouseUnknown": "Não alocado",
+  "stockAmount": "Qtd: {value}",
+  "@stockAmount": {
+    "placeholders": {
+      "value": { "type": "int" }
+    }
+  }
+}

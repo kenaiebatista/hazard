@@ -1,0 +1,70 @@
+{
+  "@@locale": "en",
+
+  "loginWelcome": "Welcome!",
+  "loginRegisterTitle": "Register",
+  "loginFieldName": "Name",
+  "loginFieldEmail": "Email",
+  "loginFieldPassword": "Password",
+  "loginFieldConfirmPassword": "Confirm Password",
+  "loginButtonSignIn": "Sign In",
+  "loginButtonRegister": "Register",
+  "loginLinkHaveAccount": "I already have an account",
+  "loginLinkRegister": "Sign up",
+  "loginErrorInvalidCredentials": "Incorrect email or password.",
+  "loginErrorEmailAlreadyRegistered": "This email is already registered.",
+  "loginValidatorNameRequired": "Enter your name",
+  "loginValidatorEmailRequired": "Enter your email",
+  "loginValidatorEmailInvalid": "Invalid email",
+  "loginValidatorPasswordRequired": "Enter your password",
+  "loginValidatorPasswordMinLength": "Minimum 6 characters",
+  "loginValidatorConfirmPasswordRequired": "Confirm your password",
+  "loginValidatorPasswordMismatch": "Passwords do not match",
+
+  "navList": "List",
+  "navManagement": "Management",
+  "navStock": "Stock",
+  "navProduct": "Product",
+  "navCategory": "Category",
+
+  "warehouseTitle": "Warehouse",
+  "warehouseEmpty": "No warehouses registered.",
+  "warehouseCapacity": "Cap: {value}",
+  "@warehouseCapacity": {
+    "placeholders": {
+      "value": { "type": "int" }
+    }
+  },
+  "warehouseManageTitle": "Manage Warehouse",
+
+  "sidebarModuleWarehouse": "Warehouse",
+  "sidebarModuleCategory": "Category",
+
+  "categoryTitle": "Category",
+  "categoryEmpty": "No categories registered.",
+
+  "productTitle": "Product",
+  "productEmpty": "No products registered.",
+
+  "stockTitle": "Stock",
+  "stockEmpty": "No products registered.",
+  "stockSku": "SKU: {value}",
+  "@stockSku": {
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "stockWarehouse": "Warehouse: {value}",
+  "@stockWarehouse": {
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "stockWarehouseUnknown": "Not allocated",
+  "stockAmount": "Qty: {value}",
+  "@stockAmount": {
+    "placeholders": {
+      "value": { "type": "int" }
+    }
+  }
+}
