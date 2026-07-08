@@ -1,3 +1,4 @@
+import 'package:hazard/core/errors/app_exception.dart';
 import 'package:hazard/domain/entities/movement_entity.dart';
 import 'package:hazard/domain/entities/product_entity.dart';
 import 'package:hazard/domain/enums/movement_type.dart';
@@ -15,6 +16,10 @@ class RemoveMovementUseCase {
        _productRepository = productRepository;
 
   Future<void> call(MovementEntity movement) async {
+    if (movement.returned) {
+      throw const AppException(AppErrorKey.movementAlreadyReturnedForRemoval);
+    }
+
     final product = await _productRepository.getByWarehouseAndSku(
       movement.product.warehouseId,
       movement.product.sku,
@@ -41,6 +46,7 @@ class RemoveMovementUseCase {
         subcategoryId: product.subcategoryId,
         warehouseId: product.warehouseId,
         amount: amount,
+        imageUrl: product.imageUrl,
       );
 
       await _productRepository.save(updatedProduct);

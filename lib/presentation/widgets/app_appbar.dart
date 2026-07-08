@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hazard/core/theme/app_colors_theme.dart';
 import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/widgets/app_icon.dart';
+import 'package:hazard/presentation/widgets/settings_dialog.dart';
 
 class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
   const AppbarWidget({super.key});
@@ -25,8 +25,10 @@ class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
     final title = _resolveTitle(context, location);
 
     return AppBar(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       elevation: 0,
+      scrolledUnderElevation: 0,
+      surfaceTintColor: Colors.transparent,
       title: Row(
         spacing: 8,
         children: [
@@ -38,7 +40,7 @@ class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
             height: 40,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
-              color: Color(-15658620),
+              color: Theme.of(context).primaryColor,
             ),
             child: Center(
               child: IconButton(
@@ -53,7 +55,10 @@ class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
                     borderRadius: BorderRadius.circular(15),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (_) => const SettingsDialog(),
+                ),
                 icon: const Icon(Icons.settings, size: 26),
               ),
             ),

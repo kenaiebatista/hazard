@@ -1,72 +1,85 @@
 import 'package:flutter/material.dart';
 import 'package:hazard/l10n/app_localizations.dart';
+import 'package:hazard/presentation/providers/dashboard_provider.dart';
 import 'package:hazard/presentation/widgets/app_appbar.dart';
+import 'package:hazard/presentation/widgets/charts/category_stock_chart.dart';
 import 'package:hazard/presentation/widgets/charts/movement_chart.dart';
+import 'package:hazard/presentation/widgets/charts/warehouse_chart.dart';
 import 'package:hazard/presentation/widgets/dashboard_card_widget.dart';
+import 'package:hazard/presentation/widgets/recent_movements_widget.dart';
+import 'package:provider/provider.dart';
 
 class WarehouseManagementScreen extends StatelessWidget {
   const WarehouseManagementScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppbarWidget(),
       body: const Padding(
         padding: EdgeInsets.all(16),
         child: WarehouseDashboard(),
       ),
-      //child: Text(l10n.warehouseManageTitle, style: const TextStyle(fontSize: 24)),
     );
   }
 }
 
-class WarehouseDashboard extends StatelessWidget {
+class WarehouseDashboard extends StatefulWidget {
   const WarehouseDashboard({super.key});
 
   @override
+  State<WarehouseDashboard> createState() => _WarehouseDashboardState();
+}
+
+class _WarehouseDashboardState extends State<WarehouseDashboard> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<DashboardProvider>().loadDashboardData();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final dashboardProvider = context.watch<DashboardProvider>();
+
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: DashboardCard(
-                  title: 'Estoque Geral',
-                  value: '0',
+                  title: l10n.dashboardTotalStock,
+                  value: '${dashboardProvider.totalStock}',
                   icon: Icons.inventory_2,
                 ),
               ),
-              SizedBox(
-                width: 16,
-                child: Expanded(
-                  child: DashboardCard(
-                    title: 'Entrada (7 dias)',
-                    value: '0',
-                    icon: Icons.arrow_downward,
-                  ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: DashboardCard(
+                  title: l10n.dashboardEntries7Days,
+                  value: '${dashboardProvider.entriesLast7Days}',
+                  icon: Icons.arrow_downward,
                 ),
               ),
-              SizedBox(
-                width: 16,
-                child: Expanded(
-                  child: DashboardCard(
-                    title: 'Saída (7 dias)',
-                    value: '0',
-                    icon: Icons.arrow_upward,
-                  ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: DashboardCard(
+                  title: l10n.dashboardExits7Days,
+                  value: '${dashboardProvider.exitsLast7Days}',
+                  icon: Icons.arrow_upward,
                 ),
               ),
-              SizedBox(
-                width: 16,
-                child: Expanded(
-                  child: DashboardCard(
-                    title: 'Devoluções',
-                    value: '0',
-                    icon: Icons.keyboard_return,
-                  ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: DashboardCard(
+                  title: l10n.dashboardReturns,
+                  value: '${dashboardProvider.returnsCount}',
+                  icon: Icons.keyboard_return,
                 ),
               ),
             ],
@@ -75,26 +88,23 @@ class WarehouseDashboard extends StatelessWidget {
 
           Row(
             children: [
-              //Expanded(
-              //  child: MovementChart(),
-              //),
+              Expanded(child: RecentMovementsWidget(),),
               SizedBox(width: 20),
 
-              Expanded(child: Placeholder(fallbackHeight: 320)),
+              Expanded(child: MovementChart()),
             ],
           ),
 
           Row(
             children: [
-              Expanded(child: Placeholder(fallbackHeight: 320)),
+              Expanded(child: WarehouseStockChart()),
 
               SizedBox(width: 20),
-
-              Expanded(child: Placeholder(fallbackHeight: 320)),
+              Expanded(child: CategoryStockChart()),
             ],
           ),
           SizedBox(height: 20),
-          Placeholder(fallbackHeight: 250),
+          
         ],
       ),
     );

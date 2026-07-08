@@ -20,7 +20,7 @@ class CategoryProvider extends ChangeNotifier {
 
   List<CategoryEntity> _categories = [];
   bool _isLoading = false;
-  String? _error;
+  Object? _error;
 
   bool _isSelecting = false;
   final Set<String> _selectedIds = {};
@@ -29,7 +29,7 @@ class CategoryProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  String? get error => _error;
+  Object? get error => _error;
 
   bool get isSelecting => _isSelecting;
 
@@ -64,7 +64,7 @@ class CategoryProvider extends ChangeNotifier {
     try {
       _categories = (await _getAllCategories()).toList();
     } catch (e) {
-      _error = e.toString();
+      _error = e;
     } finally {
       _isLoading = false;
       notifyListeners();

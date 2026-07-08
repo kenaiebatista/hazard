@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:hazard/presentation/screens/login/login_screen.dart';
 import 'package:provider/provider.dart';
@@ -18,10 +17,7 @@ class LeftPanel extends StatelessWidget {
             if (state.change) ...const [
               Color(-15658620),
               Colors.lightBlueAccent,
-            ] else ...const [
-              Colors.lightBlueAccent,
-              Color(-15658620),
-            ],
+            ] else ...const [Colors.lightBlueAccent, Color(-15658620)],
           ],
         ),
       ),

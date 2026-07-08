@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hazard/presentation/widgets/card_form.dart';
-import 'package:hazard/presentation/widgets/left_panel.dart';
+import 'package:hazard/presentation/widgets/login_left_panel.dart';
 import 'package:provider/provider.dart';
 
 class StateChange extends ChangeNotifier {

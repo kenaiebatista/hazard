@@ -8,6 +8,7 @@ class MovementEntity extends Entity {
   final int quantity;
   final DateTime movementDate;
   final String? observation;
+  final bool returned;
 
   MovementEntity({
     String? id,
@@ -16,6 +17,7 @@ class MovementEntity extends Entity {
     required this.quantity,
     DateTime? movementDate,
     this.observation,
+    this.returned = false,
   }) : assert(quantity > 0, 'A quantidade deve ser maior que zero'),
        movementDate = movementDate ?? DateTime.now(),
        super(id: id);

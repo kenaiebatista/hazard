@@ -5,13 +5,21 @@ class MainIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container( decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Color(-15658620),),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Theme.of(context).primaryColor,
+      ),
       height: 36,
       width: 38,
       child: Center(
         child: Text(
           'P',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
         ),
       ),
     );

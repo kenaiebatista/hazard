@@ -78,7 +78,7 @@ class CardFormState extends State<CardForm> {
         margin: const EdgeInsets.all(64),
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(color: const Color(-15658620), width: 1.5),
+          border: Border.all(color: Theme.of(context).primaryColor, width: 1.5),
           borderRadius: BorderRadius.circular(15),
         ),
         child: AnimatedSize(
@@ -161,7 +161,8 @@ class CardFormState extends State<CardForm> {
                       if (value == null || value.isEmpty) {
                         return l10n.loginValidatorEmailRequired;
                       }
-                      if (!value.contains('@')) return l10n.loginValidatorEmailInvalid;
+                      if (!value.contains('@'))
+                        return l10n.loginValidatorEmailInvalid;
                       return null;
                     },
                   ),
@@ -174,7 +175,8 @@ class CardFormState extends State<CardForm> {
                       if (value == null || value.isEmpty) {
                         return l10n.loginValidatorPasswordRequired;
                       }
-                      if (value.length < 6) return l10n.loginValidatorPasswordMinLength;
+                      if (value.length < 6)
+                        return l10n.loginValidatorPasswordMinLength;
                       return null;
                     },
                   ),
@@ -216,14 +218,16 @@ class CardFormState extends State<CardForm> {
                         height: 40,
                         width: 200,
                         decoration: BoxDecoration(
-                          color: const Color(-15658620),
+                          color: Theme.of(context).primaryColor,
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Center(
                           child: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 750),
                             child: Text(
-                              isCadastro ? l10n.loginButtonRegister : l10n.loginButtonSignIn,
+                              isCadastro
+                                  ? l10n.loginButtonRegister
+                                  : l10n.loginButtonSignIn,
                               key: ValueKey(isCadastro),
                               style: const TextStyle(color: Colors.white),
                             ),
@@ -238,7 +242,9 @@ class CardFormState extends State<CardForm> {
                       child: AnimatedSwitcher(
                         duration: const Duration(milliseconds: 750),
                         child: Text(
-                          isCadastro ? l10n.loginLinkHaveAccount : l10n.loginLinkRegister,
+                          isCadastro
+                              ? l10n.loginLinkHaveAccount
+                              : l10n.loginLinkRegister,
                           key: ValueKey(isCadastro),
                         ),
                       ),

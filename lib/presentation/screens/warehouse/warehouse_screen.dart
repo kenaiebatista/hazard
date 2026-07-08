@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:hazard/core/errors/app_exception.dart';
 import 'package:hazard/domain/entities/warehouse_entity.dart';
 import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/providers/warehouse_provider.dart';
@@ -34,21 +35,23 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
       return;
     }
 
+    final l10n = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Excluir armazéns'),
-        content: Text(
-          'Deseja excluir ${provider.selectedIds.length} armazém(ns) selecionado(s)?',
-        ),
+        title: Text(l10n.warehouseDeleteTitle),
+        content: Text(l10n.warehouseDeleteContent(provider.selectedIds.length)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Cancelar'),
+            child: Text(l10n.commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Excluir', style: TextStyle(color: Colors.red)),
+            child: Text(
+              l10n.commonDelete,
+              style: const TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),
@@ -70,9 +73,9 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
         padding: const EdgeInsets.only(right: 8, bottom: 8),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: const Color(-15658620)),
+            border: Border.all(color: Theme.of(context).primaryColor),
           ),
           child: Column(
             children: [
@@ -88,7 +91,7 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
                           child: Row(
                             children: [
                               Text(
-                                'Lista de ${l10n.warehouseTitle}',
+                                l10n.commonListOf(l10n.warehouseTitle),
                                 style: const TextStyle(fontSize: 20),
                               ),
                               const Spacer(),
@@ -115,24 +118,11 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
                           ),
                         ),
                       ),
-                      Container(width: 2, color: Color(-15658620)),
-                      Expanded(
-                        flex: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Text(
-                            _editingWarehouse != null
-                                ? 'Editar Armazém'
-                                : 'Novo Armazém',
-                            style: const TextStyle(fontSize: 20),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
               ),
-              const Divider(color: Color(-15658620), thickness: 1),
+              Divider(color: Theme.of(context).primaryColor, thickness: 1),
               Expanded(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -149,7 +139,11 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
                               );
                             }
                             if (provider.error != null) {
-                              return Center(child: Text(provider.error!));
+                              return Center(
+                                child: Text(
+                                  describeError(provider.error!, l10n),
+                                ),
+                              );
                             }
                             if (provider.warehouses.isEmpty) {
                               return Center(child: Text(l10n.warehouseEmpty));
@@ -185,6 +179,7 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
                                                 l10n.warehouseCapacity(
                                                   warehouse.capacity,
                                                 ),
+                                                style: TextStyle(fontSize: 14),
                                               ),
                                               IconButton(
                                                 icon: const Icon(
@@ -210,17 +205,33 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
                         ),
                       ),
                     ),
-                    Container(width: 2, color: Color(-15658620)),
+                    Container(width: 2, color: Theme.of(context).primaryColor),
                     Expanded(
                       flex: 2,
-                      child: Container(
-                        color: Colors.white,
-                        child: WarehouseRightsideWidget(
-                          key: ValueKey(_editingWarehouse?.id ?? 'new'),
-                          warehouse: _editingWarehouse,
-                          onDone: () =>
-                              setState(() => _editingWarehouse = null),
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10, top: 8),
+                            child: Text(
+                              _editingWarehouse != null
+                                  ? l10n.warehouseEditTitle
+                                  : l10n.warehouseNewTitle,
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              color: Theme.of(context).cardColor,
+                              child: WarehouseRightsideWidget(
+                                key: ValueKey(_editingWarehouse?.id ?? 'new'),
+                                warehouse: _editingWarehouse,
+                                onDone: () =>
+                                    setState(() => _editingWarehouse = null),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],

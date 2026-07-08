@@ -19,7 +19,7 @@ class WarehouseProvider extends ChangeNotifier {
 
   List<WarehouseEntity> _warehouses = [];
   bool _isLoading = false;
-  String? _error;
+  Object? _error;
 
   bool _isSelecting = false;
   final Set<String> _selectedIds = {};
@@ -28,7 +28,7 @@ class WarehouseProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  String? get error => _error;
+  Object? get error => _error;
 
   bool get isSelecting => _isSelecting;
 
@@ -63,7 +63,7 @@ class WarehouseProvider extends ChangeNotifier {
     try {
       _warehouses = (await _getAllWarehouses()).toList();
     } catch (e) {
-      _error = e.toString();
+      _error = e;
     } finally {
       _isLoading = false;
       notifyListeners();

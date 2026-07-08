@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:hazard/core/errors/app_exception.dart';
 import 'package:hazard/domain/entities/warehouse_entity.dart';
 import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/providers/product_provider.dart';
@@ -24,7 +25,10 @@ class _StockScreenState extends State<StockScreen> {
     });
   }
 
-  WarehouseEntity? _findWarehouse(List<WarehouseEntity> warehouses, String warehouseId) {
+  WarehouseEntity? _findWarehouse(
+    List<WarehouseEntity> warehouses,
+    String warehouseId,
+  ) {
     try {
       return warehouses.firstWhere((warehouse) => warehouse.id == warehouseId);
     } catch (_) {
@@ -49,9 +53,9 @@ class _StockScreenState extends State<StockScreen> {
         padding: const EdgeInsets.only(right: 8, bottom: 8),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: const Color(-15658620)),
+            border: Border.all(color: Theme.of(context).primaryColor),
           ),
           child: Column(
             children: [
@@ -60,21 +64,21 @@ class _StockScreenState extends State<StockScreen> {
                 child: Row(
                   children: [
                     Text(
-                      'Lista de ${l10n.stockTitle}',
+                      l10n.commonListOf(l10n.stockTitle),
                       style: const TextStyle(fontSize: 20),
                     ),
                     const Spacer(),
                     IconButton(
                       onPressed: _openMovementDialog,
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.swap_horiz,
-                        color: Color(-15658620),
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                   ],
                 ),
               ),
-              const Divider(color: Color(-15658620), thickness: 1),
+              Divider(color: Theme.of(context).primaryColor, thickness: 1),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8.0),
@@ -84,7 +88,11 @@ class _StockScreenState extends State<StockScreen> {
                         return const Center(child: CircularProgressIndicator());
                       }
                       if (productProvider.error != null) {
-                        return Center(child: Text(productProvider.error!));
+                        return Center(
+                          child: Text(
+                            describeError(productProvider.error!, l10n),
+                          ),
+                        );
                       }
                       if (productProvider.products.isEmpty) {
                         return Center(child: Text(l10n.stockEmpty));
@@ -114,7 +122,10 @@ class _StockScreenState extends State<StockScreen> {
                                   ),
                                 ],
                               ),
-                              trailing: Text(l10n.stockAmount(product.amount ?? 0)),
+                              trailing: Text(
+                                l10n.stockAmount(product.amount ?? 0),
+                                style: TextStyle(fontSize: 14),
+                              ),
                             ),
                           );
                         },

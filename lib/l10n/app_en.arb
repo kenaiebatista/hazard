@@ -29,7 +29,7 @@
 
   "warehouseTitle": "Warehouse",
   "warehouseEmpty": "No warehouses registered.",
-  "warehouseCapacity": "Cap: {value}",
+  "warehouseCapacity": "Capacity: {value}",
   "@warehouseCapacity": {
     "placeholders": {
       "value": { "type": "int" }
@@ -61,10 +61,233 @@
     }
   },
   "stockWarehouseUnknown": "Not allocated",
-  "stockAmount": "Qty: {value}",
+  "stockAmount": "Quantity: {value}",
   "@stockAmount": {
     "placeholders": {
       "value": { "type": "int" }
+    }
+  },
+
+  "settingsTitle": "Settings",
+  "settingsLanguage": "Language",
+  "settingsLanguagePortuguese": "Português",
+  "settingsLanguageEnglish": "English",
+  "settingsLanguageSpanish": "Español",
+  "settingsDarkTheme": "Dark theme",
+
+  "commonCancel": "Cancel",
+  "commonDelete": "Delete",
+  "commonSave": "Save",
+  "commonUpdate": "Update",
+  "commonNameLabel": "Name",
+  "commonDescriptionLabel": "Description",
+  "commonValidatorNameRequired": "Enter the name",
+  "commonValidatorDescriptionRequired": "Enter the description",
+  "commonSubcategoryLabel": "Subcategory",
+  "commonListOf": "{value} list",
+  "@commonListOf": {
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "commonUnexpectedError": "An unexpected error occurred. Please try again.",
+
+  "categoryRegisterEditTitle": "Edit Category",
+  "categoryRegisterNewTitle": "New Category",
+  "categorySaveErrorPrefix": "Error saving category: {error}",
+  "@categorySaveErrorPrefix": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "categoryNoSubcategoryAdded": "No subcategory added",
+  "categoryDeleteTitle": "Delete categories",
+  "categoryDeleteContent": "Do you want to delete {count} selected category/categories?",
+  "@categoryDeleteContent": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "categorySubcategoriesCount": "{count} subcategories",
+  "@categorySubcategoriesCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "categoryNoSubcategoryRegistered": "No subcategories registered",
+
+  "productRegisterEditTitle": "Edit Product",
+  "productRegisterNewTitle": "New Product",
+  "productSaveErrorPrefix": "Error saving product: {error}",
+  "@productSaveErrorPrefix": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "productSkuLabel": "SKU",
+  "productValidatorSkuRequired": "Enter the SKU",
+  "productCategoryLabel": "Category",
+  "productValidatorCategoryRequired": "Select a category",
+  "productValidatorSubcategoryRequired": "Select a subcategory",
+  "productValidatorWarehouseRequired": "Select a warehouse",
+  "productImageUrlLabel": "Photo URL",
+  "productValidatorImageUrlInvalid": "Enter a valid URL",
+  "productDeleteTitle": "Delete products",
+  "productDeleteContent": "Do you want to delete {count} selected product(s)?",
+  "@productDeleteContent": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "productSubtitle": "SKU: {sku} • {description}",
+  "@productSubtitle": {
+    "placeholders": {
+      "sku": { "type": "String" },
+      "description": { "type": "String" }
+    }
+  },
+  "productQuantityShort": "Qty: {amount}",
+  "@productQuantityShort": {
+    "placeholders": {
+      "amount": { "type": "int" }
+    }
+  },
+
+  "warehouseDeleteTitle": "Delete warehouses",
+  "warehouseDeleteContent": "Do you want to delete {count} selected warehouse(s)?",
+  "@warehouseDeleteContent": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "warehouseEditTitle": "Edit Warehouse",
+  "warehouseNewTitle": "New Warehouse",
+  "warehouseCepLabel": "ZIP code",
+  "warehouseCepDigitsError": "ZIP code must have 8 digits",
+  "warehouseCepNotFound": "ZIP code not found",
+  "warehouseCepSearchError": "Error looking up ZIP code",
+  "warehouseSaveErrorPrefix": "Error saving warehouse: {error}",
+  "@warehouseSaveErrorPrefix": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "warehouseValidatorCepInvalid": "Enter a valid ZIP code",
+  "warehouseStreetLabel": "Street",
+  "warehouseValidatorStreetRequired": "Enter the street",
+  "warehouseNumberLabel": "Number",
+  "warehouseComplementLabel": "Complement",
+  "warehouseNeighborhoodLabel": "Neighborhood",
+  "warehouseValidatorNeighborhoodRequired": "Enter the neighborhood",
+  "warehouseCityLabel": "City",
+  "warehouseValidatorCityRequired": "Enter the city",
+  "warehouseStateLabel": "State",
+  "warehouseCapacityLabel": "Capacity",
+  "warehouseValidatorCapacityRequired": "Enter a valid capacity",
+  "warehouseCancelEdit": "Cancel editing",
+
+  "dashboardTotalStock": "Total Stock",
+  "dashboardEntries7Days": "Entries (7 days)",
+  "dashboardExits7Days": "Exits (7 days)",
+  "dashboardReturns": "Returns",
+  "dashboardNoCategory": "No category",
+  "dashboardRecentMovementsTitle": "Recent Movements",
+
+  "logoutTitle": "Log out",
+  "logoutConfirmContent": "Do you really want to log out of your account?",
+
+  "movementDialogTitle": "Stock Movements",
+  "movementAddTitle": "Add Movement",
+  "movementEditTitle": "Edit Movement",
+  "movementRemoveTitle": "Remove Movement",
+  "movementReturnTitle": "Return Movement",
+  "movementActionAdd": "Add",
+  "movementActionEdit": "Edit",
+  "movementActionRemove": "Remove",
+  "movementActionReturn": "Return",
+  "movementTypeEntry": "Entry",
+  "movementTypeExit": "Exit",
+  "movementDetailsTitle": "Movement Details",
+  "movementTypeLabel": "Type",
+  "movementNoDescription": "No description",
+  "movementValidatorProductRequired": "Select a product",
+  "movementDateLabel": "Date",
+  "movementQuantityLabel": "Quantity",
+  "movementValidatorQuantityRequired": "Enter a valid quantity",
+  "movementSaveErrorPrefix": "Error saving movement: {error}",
+  "@movementSaveErrorPrefix": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "movementDeleteTitle": "Remove movement",
+  "movementDeleteContent": "Do you want to remove the movement for \"{name}\"?",
+  "@movementDeleteContent": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "movementDeleteErrorPrefix": "Error removing movement: {error}",
+  "@movementDeleteErrorPrefix": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "movementReturnConfirmTitle": "Return movement",
+  "movementReturnConfirmContent": "Do you want to return {quantity} unit(s) of \"{name}\" to stock?",
+  "@movementReturnConfirmContent": {
+    "placeholders": {
+      "quantity": { "type": "int" },
+      "name": { "type": "String" }
+    }
+  },
+  "movementReturnErrorPrefix": "Error returning movement: {error}",
+  "@movementReturnErrorPrefix": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "movementReturnEmptyList": "No exit movements available for return.",
+  "movementEmptyList": "No movements registered.",
+  "movementQtyInlineLabel": "Qty",
+  "movementReturnedTag": "Returned",
+
+  "chartNoProductsRegistered": "No products registered",
+  "chartCategoryTitle": "Stock by Category",
+  "chartMovementTitle": "Entries x Exits",
+  "chartMovementEntriesLegend": "Entries",
+  "chartMovementExitsLegend": "Exits",
+  "chartWarehouseTitle": "Products by Warehouse",
+
+  "weekdayMon": "Mon",
+  "weekdayTue": "Tue",
+  "weekdayWed": "Wed",
+  "weekdayThu": "Thu",
+  "weekdayFri": "Fri",
+  "weekdaySat": "Sat",
+  "weekdaySun": "Sun",
+
+  "errorProductNotFound": "Product not found.",
+  "errorInsufficientStock": "Insufficient stock for \"{product}\": available {available}, requested {requested}.",
+  "@errorInsufficientStock": {
+    "placeholders": {
+      "product": { "type": "String" },
+      "available": { "type": "int" },
+      "requested": { "type": "int" }
+    }
+  },
+  "errorEmailAlreadyRegistered": "This email is already registered.",
+  "errorMovementAlreadyReturnedRemove": "A returned movement cannot be removed.",
+  "errorOnlyExitCanBeReturned": "Only exit movements can be returned.",
+  "errorMovementAlreadyReturned": "This movement has already been returned.",
+  "errorMovementAlreadyReturnedEdit": "A returned movement cannot be edited.",
+  "errorCepLookupFailed": "Could not look up the given ZIP code.",
+  "errorWarehouseCapacityExceeded": "The capacity of warehouse \"{warehouse}\" would be exceeded: capacity {capacity}, total after the movement {total}.",
+  "@errorWarehouseCapacityExceeded": {
+    "placeholders": {
+      "warehouse": { "type": "String" },
+      "capacity": { "type": "int" },
+      "total": { "type": "int" }
     }
   }
 }

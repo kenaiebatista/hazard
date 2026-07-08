@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:hazard/core/errors/app_exception.dart';
 import 'package:hazard/domain/entities/category_entity.dart';
 import 'package:hazard/domain/entities/subcategory_entity.dart';
+import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/providers/category_provider.dart';
 import 'package:hazard/presentation/widgets/app_text_field_widget.dart';
 
@@ -79,9 +81,12 @@ class _CategoryRegisterDialogState extends State<CategoryRegisterDialog> {
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Erro ao salvar categoria: $e')));
+        final l10n = AppLocalizations.of(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.categorySaveErrorPrefix(describeError(e, l10n))),
+          ),
+        );
       }
     } finally {
       if (mounted) setState(() => _isSaving = false);
@@ -90,14 +95,15 @@ class _CategoryRegisterDialogState extends State<CategoryRegisterDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Dialog(
       backgroundColor: Colors.transparent,
       child: Container(
         width: 450,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: const Color(-15658620)),
-          color: Colors.white,
+          border: Border.all(color: Theme.of(context).primaryColor),
+          color: Theme.of(context).cardColor,
         ),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -110,7 +116,9 @@ class _CategoryRegisterDialogState extends State<CategoryRegisterDialog> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      _isEditing ? 'Editar Categoria' : 'Nova Categoria',
+                      _isEditing
+                          ? l10n.categoryRegisterEditTitle
+                          : l10n.categoryRegisterNewTitle,
                       style: const TextStyle(fontSize: 20),
                     ),
                     IconButton(
@@ -121,19 +129,19 @@ class _CategoryRegisterDialogState extends State<CategoryRegisterDialog> {
                 ),
                 const SizedBox(height: 8),
                 TextFieldWidget(
-                  label: 'Nome',
+                  label: l10n.commonNameLabel,
                   controller: _nameController,
                   keyboardType: TextInputType.name,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Informe o nome';
+                      return l10n.commonValidatorNameRequired;
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 12),
                 TextFieldWidget(
-                  label: 'Subcategoria',
+                  label: l10n.commonSubcategoryLabel,
                   controller: _subcategoryController,
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.add),
@@ -144,10 +152,13 @@ class _CategoryRegisterDialogState extends State<CategoryRegisterDialog> {
                 SizedBox(
                   height: 120,
                   child: _subcategories.isEmpty
-                      ? const Center(
+                      ? Center(
                           child: Text(
-                            'Nenhuma subcategoria adicionada',
-                            style: TextStyle(color: Colors.grey, fontSize: 12),
+                            l10n.categoryNoSubcategoryAdded,
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12,
+                            ),
                           ),
                         )
                       : ListView.builder(
@@ -160,7 +171,7 @@ class _CategoryRegisterDialogState extends State<CategoryRegisterDialog> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15),
                                 border: Border.all(
-                                  color: const Color(-15658620),
+                                  color: Theme.of(context).primaryColor,
                                 ),
                               ),
                               child: Row(
@@ -179,7 +190,7 @@ class _CategoryRegisterDialogState extends State<CategoryRegisterDialog> {
                 ),
                 const SizedBox(height: 16),
                 Material(
-                  color: const Color(-15658620),
+                  color: Theme.of(context).primaryColor,
                   borderRadius: BorderRadius.circular(15),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(15),
@@ -197,7 +208,7 @@ class _CategoryRegisterDialogState extends State<CategoryRegisterDialog> {
                                 ),
                               )
                             : Text(
-                                _isEditing ? 'Atualizar' : 'Salvar',
+                                _isEditing ? l10n.commonUpdate : l10n.commonSave,
                                 style: const TextStyle(
                                   fontSize: 18,
                                   color: Colors.white,

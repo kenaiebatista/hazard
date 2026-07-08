@@ -61,10 +61,233 @@
     }
   },
   "stockWarehouseUnknown": "No asignado",
-  "stockAmount": "Cant: {value}",
+  "stockAmount": "Cantidad: {value}",
   "@stockAmount": {
     "placeholders": {
       "value": { "type": "int" }
+    }
+  },
+
+  "settingsTitle": "Configuración",
+  "settingsLanguage": "Idioma",
+  "settingsLanguagePortuguese": "Português",
+  "settingsLanguageEnglish": "English",
+  "settingsLanguageSpanish": "Español",
+  "settingsDarkTheme": "Tema oscuro",
+
+  "commonCancel": "Cancelar",
+  "commonDelete": "Eliminar",
+  "commonSave": "Guardar",
+  "commonUpdate": "Actualizar",
+  "commonNameLabel": "Nombre",
+  "commonDescriptionLabel": "Descripción",
+  "commonValidatorNameRequired": "Ingresa el nombre",
+  "commonValidatorDescriptionRequired": "Ingresa la descripción",
+  "commonSubcategoryLabel": "Subcategoría",
+  "commonListOf": "Lista de {value}",
+  "@commonListOf": {
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "commonUnexpectedError": "Ocurrió un error inesperado. Inténtalo de nuevo.",
+
+  "categoryRegisterEditTitle": "Editar Categoría",
+  "categoryRegisterNewTitle": "Nueva Categoría",
+  "categorySaveErrorPrefix": "Error al guardar la categoría: {error}",
+  "@categorySaveErrorPrefix": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "categoryNoSubcategoryAdded": "Ninguna subcategoría agregada",
+  "categoryDeleteTitle": "Eliminar categorías",
+  "categoryDeleteContent": "¿Deseas eliminar {count} categoría(s) seleccionada(s)?",
+  "@categoryDeleteContent": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "categorySubcategoriesCount": "{count} subcategorías",
+  "@categorySubcategoriesCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "categoryNoSubcategoryRegistered": "No hay subcategorías registradas",
+
+  "productRegisterEditTitle": "Editar Producto",
+  "productRegisterNewTitle": "Nuevo Producto",
+  "productSaveErrorPrefix": "Error al guardar el producto: {error}",
+  "@productSaveErrorPrefix": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "productSkuLabel": "SKU",
+  "productValidatorSkuRequired": "Ingresa el SKU",
+  "productCategoryLabel": "Categoría",
+  "productValidatorCategoryRequired": "Selecciona una categoría",
+  "productValidatorSubcategoryRequired": "Selecciona una subcategoría",
+  "productValidatorWarehouseRequired": "Selecciona un almacén",
+  "productImageUrlLabel": "URL de la Foto",
+  "productValidatorImageUrlInvalid": "Ingresa una URL válida",
+  "productDeleteTitle": "Eliminar productos",
+  "productDeleteContent": "¿Deseas eliminar {count} producto(s) seleccionado(s)?",
+  "@productDeleteContent": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "productSubtitle": "SKU: {sku} • {description}",
+  "@productSubtitle": {
+    "placeholders": {
+      "sku": { "type": "String" },
+      "description": { "type": "String" }
+    }
+  },
+  "productQuantityShort": "Cant: {amount}",
+  "@productQuantityShort": {
+    "placeholders": {
+      "amount": { "type": "int" }
+    }
+  },
+
+  "warehouseDeleteTitle": "Eliminar almacenes",
+  "warehouseDeleteContent": "¿Deseas eliminar {count} almacén(es) seleccionado(s)?",
+  "@warehouseDeleteContent": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "warehouseEditTitle": "Editar Almacén",
+  "warehouseNewTitle": "Nuevo Almacén",
+  "warehouseCepLabel": "Código Postal",
+  "warehouseCepDigitsError": "El código postal debe tener 8 dígitos",
+  "warehouseCepNotFound": "Código postal no encontrado",
+  "warehouseCepSearchError": "Error al buscar el código postal",
+  "warehouseSaveErrorPrefix": "Error al guardar el almacén: {error}",
+  "@warehouseSaveErrorPrefix": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "warehouseValidatorCepInvalid": "Ingresa un código postal válido",
+  "warehouseStreetLabel": "Calle",
+  "warehouseValidatorStreetRequired": "Ingresa la calle",
+  "warehouseNumberLabel": "Número",
+  "warehouseComplementLabel": "Complemento",
+  "warehouseNeighborhoodLabel": "Barrio",
+  "warehouseValidatorNeighborhoodRequired": "Ingresa el barrio",
+  "warehouseCityLabel": "Ciudad",
+  "warehouseValidatorCityRequired": "Ingresa la ciudad",
+  "warehouseStateLabel": "Provincia",
+  "warehouseCapacityLabel": "Capacidad",
+  "warehouseValidatorCapacityRequired": "Ingresa una capacidad válida",
+  "warehouseCancelEdit": "Cancelar edición",
+
+  "dashboardTotalStock": "Inventario Total",
+  "dashboardEntries7Days": "Entradas (7 días)",
+  "dashboardExits7Days": "Salidas (7 días)",
+  "dashboardReturns": "Devoluciones",
+  "dashboardNoCategory": "Sin categoría",
+  "dashboardRecentMovementsTitle": "Últimos Movimientos",
+
+  "logoutTitle": "Cerrar sesión",
+  "logoutConfirmContent": "¿Realmente deseas cerrar sesión?",
+
+  "movementDialogTitle": "Movimientos de Inventario",
+  "movementAddTitle": "Agregar Movimiento",
+  "movementEditTitle": "Editar Movimiento",
+  "movementRemoveTitle": "Eliminar Movimiento",
+  "movementReturnTitle": "Devolver Movimiento",
+  "movementActionAdd": "Agregar",
+  "movementActionEdit": "Editar",
+  "movementActionRemove": "Eliminar",
+  "movementActionReturn": "Devolver",
+  "movementTypeEntry": "Entrada",
+  "movementTypeExit": "Salida",
+  "movementDetailsTitle": "Detalles del Movimiento",
+  "movementTypeLabel": "Tipo",
+  "movementNoDescription": "Sin descripción",
+  "movementValidatorProductRequired": "Selecciona un producto",
+  "movementDateLabel": "Fecha",
+  "movementQuantityLabel": "Cantidad",
+  "movementValidatorQuantityRequired": "Ingresa una cantidad válida",
+  "movementSaveErrorPrefix": "Error al guardar el movimiento: {error}",
+  "@movementSaveErrorPrefix": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "movementDeleteTitle": "Eliminar movimiento",
+  "movementDeleteContent": "¿Deseas eliminar el movimiento de \"{name}\"?",
+  "@movementDeleteContent": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "movementDeleteErrorPrefix": "Error al eliminar el movimiento: {error}",
+  "@movementDeleteErrorPrefix": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "movementReturnConfirmTitle": "Devolver movimiento",
+  "movementReturnConfirmContent": "¿Deseas devolver {quantity} unidad(es) de \"{name}\" al inventario?",
+  "@movementReturnConfirmContent": {
+    "placeholders": {
+      "quantity": { "type": "int" },
+      "name": { "type": "String" }
+    }
+  },
+  "movementReturnErrorPrefix": "Error al devolver el movimiento: {error}",
+  "@movementReturnErrorPrefix": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "movementReturnEmptyList": "No hay movimientos de salida disponibles para devolución.",
+  "movementEmptyList": "No hay movimientos registrados.",
+  "movementQtyInlineLabel": "Cant",
+  "movementReturnedTag": "Devuelta",
+
+  "chartNoProductsRegistered": "No hay productos registrados",
+  "chartCategoryTitle": "Inventario por Categoría",
+  "chartMovementTitle": "Entradas x Salidas",
+  "chartMovementEntriesLegend": "Entradas",
+  "chartMovementExitsLegend": "Salidas",
+  "chartWarehouseTitle": "Productos por Almacén",
+
+  "weekdayMon": "Lun",
+  "weekdayTue": "Mar",
+  "weekdayWed": "Mié",
+  "weekdayThu": "Jue",
+  "weekdayFri": "Vie",
+  "weekdaySat": "Sáb",
+  "weekdaySun": "Dom",
+
+  "errorProductNotFound": "Producto no encontrado.",
+  "errorInsufficientStock": "Inventario insuficiente para \"{product}\": disponible {available}, solicitado {requested}.",
+  "@errorInsufficientStock": {
+    "placeholders": {
+      "product": { "type": "String" },
+      "available": { "type": "int" },
+      "requested": { "type": "int" }
+    }
+  },
+  "errorEmailAlreadyRegistered": "Este correo ya está registrado.",
+  "errorMovementAlreadyReturnedRemove": "No es posible eliminar un movimiento ya devuelto.",
+  "errorOnlyExitCanBeReturned": "Solo los movimientos de salida pueden ser devueltos.",
+  "errorMovementAlreadyReturned": "Este movimiento ya ha sido devuelto.",
+  "errorMovementAlreadyReturnedEdit": "No es posible editar un movimiento ya devuelto.",
+  "errorCepLookupFailed": "No fue posible buscar el código postal indicado.",
+  "errorWarehouseCapacityExceeded": "Se excedería la capacidad del almacén \"{warehouse}\": capacidad {capacity}, total después del movimiento {total}.",
+  "@errorWarehouseCapacityExceeded": {
+    "placeholders": {
+      "warehouse": { "type": "String" },
+      "capacity": { "type": "int" },
+      "total": { "type": "int" }
     }
   }
 }

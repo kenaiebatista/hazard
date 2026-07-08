@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hazard/core/errors/app_exception.dart';
 import 'package:hazard/domain/entities/category_entity.dart';
 import 'package:hazard/domain/entities/product_entity.dart';
 import 'package:hazard/domain/entities/subcategory_entity.dart';
 import 'package:hazard/domain/entities/warehouse_entity.dart';
+import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/providers/category_provider.dart';
 import 'package:hazard/presentation/providers/product_provider.dart';
 import 'package:hazard/presentation/providers/warehouse_provider.dart';
@@ -23,6 +25,7 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _skuController = TextEditingController();
+  final _imageUrlController = TextEditingController();
 
   CategoryEntity? _selectedCategory;
   SubcategoryEntity? _selectedSubcategory;
@@ -39,6 +42,7 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
       _nameController.text = product.name;
       _descriptionController.text = product.description;
       _skuController.text = product.sku;
+      _imageUrlController.text = product.imageUrl ?? '';
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -82,6 +86,7 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
     _nameController.dispose();
     _descriptionController.dispose();
     _skuController.dispose();
+    _imageUrlController.dispose();
     super.dispose();
   }
 
@@ -91,6 +96,8 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
     setState(() => _isSaving = true);
     try {
       final productProvider = context.read<ProductProvider>();
+
+      final imageUrl = _imageUrlController.text.trim();
 
       if (_isEditing) {
         await productProvider.updateProduct(
@@ -102,6 +109,7 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
           subcategoryId: _selectedSubcategory!.id,
           warehouseId: _selectedWarehouse!.id,
           amount: widget.product!.amount,
+          imageUrl: imageUrl.isEmpty ? null : imageUrl,
         );
       } else {
         await productProvider.createProduct(
@@ -111,14 +119,18 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
           categoryId: _selectedCategory!.id,
           subcategoryId: _selectedSubcategory!.id,
           warehouseId: _selectedWarehouse!.id,
+          imageUrl: imageUrl.isEmpty ? null : imageUrl,
         );
       }
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Erro ao salvar produto: $e')));
+        final l10n = AppLocalizations.of(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.productSaveErrorPrefix(describeError(e, l10n))),
+          ),
+        );
       }
     } finally {
       if (mounted) setState(() => _isSaving = false);
@@ -127,6 +139,7 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final categories = context.watch<CategoryProvider>().categories;
     final warehouses = context.watch<WarehouseProvider>().warehouses;
     final subcategories = _selectedCategory?.subcategories ?? [];
@@ -138,8 +151,8 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
         constraints: const BoxConstraints(maxHeight: 640),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: Color(-15658620)),
-          color: Colors.white,
+          border: Border.all(color: Theme.of(context).primaryColor),
+          color: Theme.of(context).cardColor,
         ),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -153,7 +166,9 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        _isEditing ? 'Editar Produto' : 'Novo Produto',
+                        _isEditing
+                            ? l10n.productRegisterEditTitle
+                            : l10n.productRegisterNewTitle,
                         style: const TextStyle(fontSize: 20),
                       ),
                       IconButton(
@@ -163,41 +178,55 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
                     ],
                   ),
                   TextFieldWidget(
-                    label: 'Nome',
+                    label: l10n.commonNameLabel,
                     controller: _nameController,
                     keyboardType: TextInputType.name,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Informe o nome';
+                        return l10n.commonValidatorNameRequired;
                       }
                       return null;
                     },
                   ),
                   TextFieldWidget(
-                    label: 'Descrição',
+                    label: l10n.commonDescriptionLabel,
                     controller: _descriptionController,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Informe a descrição';
+                        return l10n.commonValidatorDescriptionRequired;
                       }
                       return null;
                     },
                   ),
                   TextFieldWidget(
-                    label: 'SKU',
+                    label: l10n.productSkuLabel,
                     controller: _skuController,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Informe o sku';
+                        return l10n.productValidatorSkuRequired;
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFieldWidget(
+                    label: l10n.productImageUrlLabel,
+                    controller: _imageUrlController,
+                    keyboardType: TextInputType.url,
+                    validator: (value) {
+                      final trimmed = value?.trim() ?? '';
+                      if (trimmed.isEmpty) return null;
+                      final uri = Uri.tryParse(trimmed);
+                      if (uri == null || !uri.hasScheme || !uri.hasAuthority) {
+                        return l10n.productValidatorImageUrlInvalid;
                       }
                       return null;
                     },
                   ),
                   DropdownButtonFormField<CategoryEntity>(
                     initialValue: _selectedCategory,
-                    decoration: const InputDecoration(
-                      labelText: 'Categoria',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: l10n.productCategoryLabel,
+                      border: const OutlineInputBorder(),
                     ),
                     items: categories.map((category) {
                       return DropdownMenuItem<CategoryEntity>(
@@ -213,16 +242,16 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
                     },
                     validator: (value) {
                       if (value == null) {
-                        return 'Selecione uma categoria';
+                        return l10n.productValidatorCategoryRequired;
                       }
                       return null;
                     },
                   ),
                   DropdownButtonFormField<SubcategoryEntity>(
                     initialValue: _selectedSubcategory,
-                    decoration: const InputDecoration(
-                      labelText: 'Subcategoria',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: l10n.commonSubcategoryLabel,
+                      border: const OutlineInputBorder(),
                     ),
                     items: subcategories.map((subcategory) {
                       return DropdownMenuItem<SubcategoryEntity>(
@@ -237,16 +266,16 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
                     },
                     validator: (value) {
                       if (value == null) {
-                        return 'Selecione uma subcategoria';
+                        return l10n.productValidatorSubcategoryRequired;
                       }
                       return null;
                     },
                   ),
                   DropdownButtonFormField<WarehouseEntity>(
                     initialValue: _selectedWarehouse,
-                    decoration: const InputDecoration(
-                      labelText: 'Armazém',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: l10n.warehouseTitle,
+                      border: const OutlineInputBorder(),
                     ),
                     items: warehouses.map((warehouse) {
                       return DropdownMenuItem<WarehouseEntity>(
@@ -261,13 +290,13 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
                     },
                     validator: (value) {
                       if (value == null) {
-                        return 'Selecione um armazém';
+                        return l10n.productValidatorWarehouseRequired;
                       }
                       return null;
                     },
                   ),
                   Material(
-                    color: const Color(-15658620),
+                    color: Theme.of(context).primaryColor,
                     borderRadius: BorderRadius.circular(15),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(15),
@@ -285,7 +314,9 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
                                   ),
                                 )
                               : Text(
-                                  _isEditing ? 'Atualizar' : 'Salvar',
+                                  _isEditing
+                                      ? l10n.commonUpdate
+                                      : l10n.commonSave,
                                   style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.white,

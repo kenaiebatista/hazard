@@ -19,7 +19,7 @@ class ProductProvider extends ChangeNotifier {
 
   List<ProductEntity> _products = [];
   bool _isLoading = false;
-  String? _error;
+  Object? _error;
 
   bool _isSelecting = false;
   final Set<String> _selectedIds = {};
@@ -28,7 +28,7 @@ class ProductProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  String? get error => _error;
+  Object? get error => _error;
 
   bool get isSelecting => _isSelecting;
 
@@ -63,7 +63,7 @@ class ProductProvider extends ChangeNotifier {
     try {
       _products = (await _getAllProducts()).toList();
     } catch (e) {
-      _error = e.toString();
+      _error = e;
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -77,6 +77,7 @@ class ProductProvider extends ChangeNotifier {
     required String categoryId,
     required String subcategoryId,
     required String warehouseId,
+    String? imageUrl,
   }) async {
     final product = ProductEntity(
       name: name,
@@ -85,6 +86,7 @@ class ProductProvider extends ChangeNotifier {
       categoryId: categoryId,
       subcategoryId: subcategoryId,
       warehouseId: warehouseId,
+      imageUrl: imageUrl,
     );
     await _createProduct(product);
     await loadProducts();
@@ -98,7 +100,8 @@ class ProductProvider extends ChangeNotifier {
     required String categoryId,
     required String subcategoryId,
     required String warehouseId,
-    int? amount,
+    required int amount,
+    String? imageUrl,
   }) async {
     final product = ProductEntity(
       id: id,
@@ -109,6 +112,7 @@ class ProductProvider extends ChangeNotifier {
       subcategoryId: subcategoryId,
       warehouseId: warehouseId,
       amount: amount,
+      imageUrl: imageUrl,
     );
     await _createProduct(product);
     await loadProducts();

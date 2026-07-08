@@ -7,7 +7,8 @@ class ProductEntity extends Entity{
   final String categoryId;
   final String subcategoryId;
   final String warehouseId;
-  final int? amount;
+  final int amount;
+  final String? imageUrl;
 
   ProductEntity({
     super.id,
@@ -18,5 +19,6 @@ class ProductEntity extends Entity{
     required this.subcategoryId,
     required this.warehouseId,
     this.amount = 0,
+    this.imageUrl,
 });
 }

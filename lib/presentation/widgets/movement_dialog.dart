@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:hazard/core/errors/app_exception.dart';
 import 'package:hazard/domain/entities/movement_entity.dart';
 import 'package:hazard/domain/entities/product_entity.dart';
 import 'package:hazard/domain/enums/movement_type.dart';
+import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/providers/movement_provider.dart';
 import 'package:hazard/presentation/providers/product_provider.dart';
+import 'package:hazard/presentation/providers/warehouse_provider.dart';
 import 'package:hazard/presentation/widgets/app_text_field_widget.dart';
+import 'package:hazard/presentation/widgets/movement_menu_button.dart';
 
-enum _MovementView { menu, add, editList, editForm, removeList }
+enum _MovementView { menu, add, editList, editForm, removeList, returnList }
 
 String _formatDate(DateTime date) {
   return '${date.day.toString().padLeft(2, '0')}/'
@@ -32,6 +36,7 @@ class _MovementDialogState extends State<MovementDialog> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProductProvider>().loadProducts();
       context.read<MovementProvider>().loadMovements();
+      context.read<WarehouseProvider>().loadWarehouses();
     });
   }
 
@@ -42,18 +47,20 @@ class _MovementDialogState extends State<MovementDialog> {
     });
   }
 
-  String get _title {
+  String _title(AppLocalizations l10n) {
     switch (_view) {
       case _MovementView.menu:
-        return 'Movimentações de Estoque';
+        return l10n.movementDialogTitle;
       case _MovementView.add:
-        return 'Adicionar Movimentação';
+        return l10n.movementAddTitle;
       case _MovementView.editList:
-        return 'Editar Movimentação';
+        return l10n.movementEditTitle;
       case _MovementView.editForm:
-        return 'Editar Movimentação';
+        return l10n.movementEditTitle;
       case _MovementView.removeList:
-        return 'Remover Movimentação';
+        return l10n.movementRemoveTitle;
+      case _MovementView.returnList:
+        return l10n.movementReturnTitle;
     }
   }
 
@@ -69,6 +76,7 @@ class _MovementDialogState extends State<MovementDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Dialog(
       backgroundColor: Colors.transparent,
       child: Container(
@@ -76,8 +84,8 @@ class _MovementDialogState extends State<MovementDialog> {
         constraints: const BoxConstraints(maxHeight: 640),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: const Color(-15658620)),
-          color: Colors.white,
+          border: Border.all(color: Theme.of(context).primaryColor),
+          color: Theme.of(context).cardColor,
         ),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -94,7 +102,7 @@ class _MovementDialogState extends State<MovementDialog> {
                     ),
                   Expanded(
                     child: Text(
-                      _title,
+                      _title(l10n),
                       style: const TextStyle(fontSize: 20),
                       textAlign: _canGoBack ? TextAlign.center : TextAlign.left,
                     ),
@@ -105,7 +113,7 @@ class _MovementDialogState extends State<MovementDialog> {
                   ),
                 ],
               ),
-              const Divider(color: Color(-15658620)),
+              Divider(color: Theme.of(context).primaryColor),
               Flexible(child: _buildBody()),
             ],
           ),
@@ -121,6 +129,7 @@ class _MovementDialogState extends State<MovementDialog> {
           onAdd: () => _goTo(_MovementView.add),
           onEdit: () => _goTo(_MovementView.editList),
           onRemove: () => _goTo(_MovementView.removeList),
+          onReturn: () => _goTo(_MovementView.returnList),
         );
       case _MovementView.add:
         return const _MovementForm();
@@ -133,6 +142,8 @@ class _MovementDialogState extends State<MovementDialog> {
         );
       case _MovementView.removeList:
         return const _MovementList(removeMode: true);
+      case _MovementView.returnList:
+        return const _MovementList(returnMode: true);
     }
   }
 }
@@ -141,67 +152,45 @@ class _MovementMenu extends StatelessWidget {
   final VoidCallback onAdd;
   final VoidCallback onEdit;
   final VoidCallback onRemove;
+  final VoidCallback onReturn;
 
   const _MovementMenu({
     required this.onAdd,
     required this.onEdit,
     required this.onRemove,
+    required this.onReturn,
   });
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 24),
       child: Column(
         spacing: 16,
         mainAxisSize: MainAxisSize.min,
         children: [
-          _MenuButton(icon: Icons.add, label: 'Adicionar', onTap: onAdd),
-          _MenuButton(icon: Icons.edit, label: 'Editar', onTap: onEdit),
-          _MenuButton(
+          MenuButton(
+            icon: Icons.add,
+            label: l10n.movementActionAdd,
+            onTap: onAdd,
+          ),
+          MenuButton(
+            icon: Icons.edit,
+            label: l10n.movementActionEdit,
+            onTap: onEdit,
+          ),
+          MenuButton(
             icon: Icons.delete_outline,
-            label: 'Remover',
+            label: l10n.movementActionRemove,
             onTap: onRemove,
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class _MenuButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  const _MenuButton({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: const Color(-15658620),
-      borderRadius: BorderRadius.circular(15),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(15),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, color: Colors.white),
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: const TextStyle(fontSize: 18, color: Colors.white),
-              ),
-            ],
+          MenuButton(
+            icon: Icons.keyboard_return,
+            label: l10n.movementActionReturn,
+            onTap: onReturn,
           ),
-        ),
+        ],
       ),
     );
   }
@@ -222,6 +211,7 @@ class _MovementFormState extends State<_MovementForm> {
   final _quantityController = TextEditingController();
 
   ProductEntity? _selectedProduct;
+  String? _selectedProductName;
   MovementType _type = MovementType.entry;
   DateTime _movementDate = DateTime.now();
   bool _isSaving = false;
@@ -233,7 +223,15 @@ class _MovementFormState extends State<_MovementForm> {
     super.initState();
     final movement = widget.movement;
     if (movement != null) {
-      _selectedProduct = movement.product;
+      final products = context.read<ProductProvider>().products;
+      try {
+        _selectedProduct = products.firstWhere(
+          (product) => product.id == movement.product.id,
+        );
+      } catch (_) {
+        _selectedProduct = movement.product;
+      }
+      _selectedProductName = movement.product.name;
       _type = movement.type;
       _movementDate = movement.movementDate;
       _quantityController.text = movement.quantity.toString();
@@ -291,8 +289,11 @@ class _MovementFormState extends State<_MovementForm> {
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao salvar movimentação: $e')),
+          SnackBar(
+            content: Text(l10n.movementSaveErrorPrefix(describeError(e, l10n))),
+          ),
         );
       }
     } finally {
@@ -302,7 +303,25 @@ class _MovementFormState extends State<_MovementForm> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final products = context.watch<ProductProvider>().products;
+    final warehouses = context.watch<WarehouseProvider>().warehouses;
+
+    final productNames = products.map((product) => product.name).toSet().toList()
+      ..sort();
+
+    final warehouseOptions = _selectedProductName == null
+        ? <ProductEntity>[]
+        : products
+              .where((product) => product.name == _selectedProductName)
+              .toList();
+
+    String warehouseName(String warehouseId) {
+      for (final warehouse in warehouses) {
+        if (warehouse.id == warehouseId) return warehouse.name;
+      }
+      return warehouseId;
+    }
 
     return SingleChildScrollView(
       child: Form(
@@ -310,28 +329,57 @@ class _MovementFormState extends State<_MovementForm> {
         child: Column(
           spacing: 16,
           children: [
-            DropdownButtonFormField<ProductEntity>(
-              initialValue: _selectedProduct,
-              decoration: const InputDecoration(
-                labelText: 'Nome',
-                border: OutlineInputBorder(),
+            DropdownButtonFormField<String>(
+              initialValue: _selectedProductName,
+              decoration: InputDecoration(
+                labelText: l10n.productTitle,
+                border: const OutlineInputBorder(),
               ),
-              items: products.map((product) {
-                return DropdownMenuItem<ProductEntity>(
-                  value: product,
-                  child: Text(product.name),
-                );
+              items: productNames.map((name) {
+                return DropdownMenuItem<String>(value: name, child: Text(name));
               }).toList(),
               onChanged: _isEditing
                   ? null
+                  : (name) {
+                      final matches = products
+                          .where((product) => product.name == name)
+                          .toList();
+                      setState(() {
+                        _selectedProductName = name;
+                        _selectedProduct = matches.length == 1
+                            ? matches.first
+                            : null;
+                      });
+                    },
+              validator: (value) {
+                if (value == null) return l10n.movementValidatorProductRequired;
+                return null;
+              },
+            ),
+            DropdownButtonFormField<ProductEntity>(
+              initialValue: _selectedProduct,
+              decoration: InputDecoration(
+                labelText: l10n.warehouseTitle,
+                border: const OutlineInputBorder(),
+              ),
+              items: warehouseOptions.map((product) {
+                return DropdownMenuItem<ProductEntity>(
+                  value: product,
+                  child: Text(warehouseName(product.warehouseId)),
+                );
+              }).toList(),
+              onChanged: (_isEditing || _selectedProductName == null)
+                  ? null
                   : (product) => setState(() => _selectedProduct = product),
               validator: (value) {
-                if (value == null) return 'Selecione um produto';
+                if (value == null) {
+                  return l10n.productValidatorWarehouseRequired;
+                }
                 return null;
               },
             ),
             TextFieldWidget(
-              label: 'Descrição',
+              label: l10n.commonDescriptionLabel,
               controller: _descriptionController,
             ),
             Material(
@@ -340,23 +388,23 @@ class _MovementFormState extends State<_MovementForm> {
                 borderRadius: BorderRadius.circular(15),
                 onTap: _pickDate,
                 child: InputDecorator(
-                  decoration: const InputDecoration(
-                    labelText: 'Data',
-                    border: OutlineInputBorder(),
-                    suffixIcon: Icon(Icons.calendar_today),
+                  decoration: InputDecoration(
+                    labelText: l10n.movementDateLabel,
+                    border: const OutlineInputBorder(),
+                    suffixIcon: const Icon(Icons.calendar_today),
                   ),
                   child: Text(_formatDate(_movementDate)),
                 ),
               ),
             ),
             TextFieldWidget(
-              label: 'Quantidade',
+              label: l10n.movementQuantityLabel,
               controller: _quantityController,
               keyboardType: TextInputType.number,
               validator: (value) {
                 final parsed = int.tryParse(value?.trim() ?? '');
                 if (parsed == null || parsed <= 0) {
-                  return 'Informe uma quantidade válida';
+                  return l10n.movementValidatorQuantityRequired;
                 }
                 return null;
               },
@@ -365,18 +413,18 @@ class _MovementFormState extends State<_MovementForm> {
               groupValue: _type,
               onChanged: (value) => setState(() => _type = value!),
               child: Row(
-                children: const [
+                children: [
                   Expanded(
                     child: RadioListTile<MovementType>(
                       contentPadding: EdgeInsets.zero,
-                      title: Text('Adicionar'),
+                      title: Text(l10n.movementTypeEntry),
                       value: MovementType.entry,
                     ),
                   ),
                   Expanded(
                     child: RadioListTile<MovementType>(
                       contentPadding: EdgeInsets.zero,
-                      title: Text('Remover'),
+                      title: Text(l10n.movementTypeExit),
                       value: MovementType.exit,
                     ),
                   ),
@@ -384,7 +432,7 @@ class _MovementFormState extends State<_MovementForm> {
               ),
             ),
             Material(
-              color: const Color(-15658620),
+              color: Theme.of(context).primaryColor,
               borderRadius: BorderRadius.circular(15),
               child: InkWell(
                 borderRadius: BorderRadius.circular(15),
@@ -401,9 +449,9 @@ class _MovementFormState extends State<_MovementForm> {
                               color: Colors.white,
                             ),
                           )
-                        : const Text(
-                            'Salvar',
-                            style: TextStyle(
+                        : Text(
+                            l10n.commonSave,
+                            style: const TextStyle(
                               fontSize: 18,
                               color: Colors.white,
                             ),
@@ -421,58 +469,134 @@ class _MovementFormState extends State<_MovementForm> {
 
 class _MovementList extends StatelessWidget {
   final bool removeMode;
+  final bool returnMode;
   final void Function(MovementEntity movement)? onTapMovement;
 
-  const _MovementList({this.removeMode = false, this.onTapMovement});
+  const _MovementList({
+    this.removeMode = false,
+    this.returnMode = false,
+    this.onTapMovement,
+  });
 
   Future<void> _confirmDelete(
     BuildContext context,
     MovementEntity movement,
   ) async {
+    final l10n = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Remover movimentação'),
-        content: Text(
-          'Deseja remover a movimentação de "${movement.product.name}"?',
-        ),
+        title: Text(l10n.movementDeleteTitle),
+        content: Text(l10n.movementDeleteContent(movement.product.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Cancelar'),
+            child: Text(l10n.commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Remover', style: TextStyle(color: Colors.red)),
+            child: Text(
+              l10n.commonDelete,
+              style: const TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),
     );
 
     if (confirmed == true && context.mounted) {
-      await context.read<MovementProvider>().deleteMovement(movement);
+      try {
+        await context.read<MovementProvider>().deleteMovement(movement);
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                l10n.movementDeleteErrorPrefix(describeError(e, l10n)),
+              ),
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> _confirmReturn(
+    BuildContext context,
+    MovementEntity movement,
+  ) async {
+    final l10n = AppLocalizations.of(context);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.movementReturnConfirmTitle),
+        content: Text(
+          l10n.movementReturnConfirmContent(
+            movement.quantity,
+            movement.product.name,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.commonCancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l10n.movementActionReturn),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      try {
+        await context.read<MovementProvider>().returnMovement(movement);
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                l10n.movementReturnErrorPrefix(describeError(e, l10n)),
+              ),
+            ),
+          );
+        }
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final provider = context.watch<MovementProvider>();
 
     if (provider.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
     if (provider.error != null) {
-      return Center(child: Text(provider.error!));
+      return Center(child: Text(describeError(provider.error!, l10n)));
     }
-    if (provider.movements.isEmpty) {
-      return const Center(child: Text('Nenhuma movimentação registrada.'));
+
+    final movements = returnMode
+        ? provider.movements
+              .where((m) => m.type == MovementType.exit && !m.returned)
+              .toList()
+        : provider.movements;
+
+    if (movements.isEmpty) {
+      return Center(
+        child: Text(
+          returnMode ? l10n.movementReturnEmptyList : l10n.movementEmptyList,
+        ),
+      );
     }
 
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: provider.movements.length,
+      itemCount: movements.length,
       itemBuilder: (context, index) {
-        final movement = provider.movements[index];
+        final movement = movements[index];
         final isEntry = movement.type == MovementType.entry;
 
         return Card(
@@ -484,16 +608,25 @@ class _MovementList extends StatelessWidget {
             ),
             title: Text(movement.product.name),
             subtitle: Text(
-              '${_formatDate(movement.movementDate)} • Qtd: ${movement.quantity}'
-              '${movement.observation != null && movement.observation!.isNotEmpty ? ' • ${movement.observation}' : ''}',
+              '${_formatDate(movement.movementDate)} • '
+              '${l10n.movementQtyInlineLabel}: ${movement.quantity}'
+              '${movement.observation != null && movement.observation!.isNotEmpty ? ' • ${movement.observation}' : ''}'
+              '${movement.returned ? ' • ${l10n.movementReturnedTag}' : ''}',
             ),
             trailing: removeMode
                 ? IconButton(
                     icon: const Icon(Icons.delete_outline, color: Colors.red),
                     onPressed: () => _confirmDelete(context, movement),
                   )
+                : returnMode
+                ? IconButton(
+                    icon: const Icon(Icons.keyboard_return),
+                    onPressed: () => _confirmReturn(context, movement),
+                  )
                 : const Icon(Icons.chevron_right),
-            onTap: removeMode ? null : () => onTapMovement?.call(movement),
+            onTap: (removeMode || returnMode)
+                ? null
+                : () => onTapMovement?.call(movement),
           ),
         );
       },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:hazard/core/errors/app_exception.dart';
 import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/providers/category_provider.dart';
 import 'package:hazard/presentation/screens/category/category_register_screen.dart';
@@ -31,21 +32,23 @@ class _CategoryScreenState extends State<CategoryScreen> {
       return;
     }
 
+    final l10n = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Excluir categorias'),
-        content: Text(
-          'Deseja excluir ${provider.selectedIds.length} categoria(s) selecionada(s)?',
-        ),
+        title: Text(l10n.categoryDeleteTitle),
+        content: Text(l10n.categoryDeleteContent(provider.selectedIds.length)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Cancelar'),
+            child: Text(l10n.commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Excluir', style: TextStyle(color: Colors.red)),
+            child: Text(
+              l10n.commonDelete,
+              style: const TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),
@@ -67,9 +70,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
         padding: const EdgeInsets.only(right: 8, bottom: 8),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: const Color(-15658620)),
+            border: Border.all(color: Theme.of(context).primaryColor),
           ),
           child: Column(
             children: [
@@ -79,7 +82,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   child: Row(
                     children: [
                       Text(
-                        'Lista de ${l10n.categoryTitle}',
+                        l10n.commonListOf(l10n.categoryTitle),
                         style: const TextStyle(fontSize: 20),
                       ),
                       const Spacer(),
@@ -98,7 +101,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           provider.isSelecting ? Icons.close : Icons.add,
                           color: provider.isSelecting
                               ? Colors.grey
-                              : const Color(-15658620),
+                              : Theme.of(context).primaryColor,
                         ),
                       ),
                       IconButton(
@@ -116,7 +119,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   ),
                 ),
               ),
-              const Divider(color: Color(-15658620), thickness: 1),
+              Divider(color: Theme.of(context).primaryColor, thickness: 1),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8.0),
@@ -126,7 +129,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         return const Center(child: CircularProgressIndicator());
                       }
                       if (provider.error != null) {
-                        return Center(child: Text(provider.error!));
+                        return Center(
+                          child: Text(describeError(provider.error!, l10n)),
+                        );
                       }
                       if (provider.categories.isEmpty) {
                         return Center(child: Text(l10n.categoryEmpty));
@@ -147,7 +152,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 ),
                                 title: Text(category.name),
                                 subtitle: Text(
-                                  '${category.subcategories.length} subcategorias',
+                                  l10n.categorySubcategoriesCount(
+                                    category.subcategories.length,
+                                  ),
                                 ),
                                 onTap: () =>
                                     provider.toggleSelection(category.id),
@@ -174,15 +181,17 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 ],
                               ),
                               subtitle: Text(
-                                '${category.subcategories.length} subcategorias',
+                                l10n.categorySubcategoriesCount(
+                                  category.subcategories.length,
+                                ),
                               ),
                               children: category.subcategories.isEmpty
-                                  ? const [
+                                  ? [
                                       Padding(
-                                        padding: EdgeInsets.all(12.0),
+                                        padding: const EdgeInsets.all(12.0),
                                         child: Text(
-                                          'Nenhuma subcategoria cadastrada',
-                                          style: TextStyle(
+                                          l10n.categoryNoSubcategoryRegistered,
+                                          style: const TextStyle(
                                             color: Colors.grey,
                                             fontSize: 12,
                                           ),

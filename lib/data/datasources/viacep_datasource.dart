@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:hazard/core/errors/app_exception.dart';
 import '../../domain/entities/address_entity.dart';
 
 class ViaCepDataSource {
@@ -10,7 +11,7 @@ class ViaCepDataSource {
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Erro ao buscar CEP');
+      throw const AppException(AppErrorKey.cepLookupFailed);
     }
 
     final json = jsonDecode(response.body);

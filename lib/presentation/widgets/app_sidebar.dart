@@ -4,6 +4,7 @@ import 'package:hazard/core/theme/app_colors_theme.dart';
 import 'package:hazard/domain/entities/sidebar_group_entity.dart';
 import 'package:hazard/domain/entities/sidebar_item_entity.dart';
 import 'package:hazard/l10n/app_localizations.dart';
+import 'package:hazard/presentation/providers/auth_provider.dart';
 import 'package:hazard/presentation/providers/sidebar_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +17,16 @@ String _groupTitle(AppLocalizations l10n, String textCode) {
     default:
       return textCode;
   }
+}
+
+// The sidebar always has a dark background, in both the light and dark app
+// themes, so its accent must stay legible against dark navy even when
+// Theme.primaryColor itself is a dark color (as it is in the light theme).
+Color _sidebarAccentColor(BuildContext context) {
+  final theme = Theme.of(context);
+  return theme.brightness == Brightness.dark
+      ? theme.primaryColor
+      : AppColors.sidebarAccentLight;
 }
 
 String _itemTitle(AppLocalizations l10n, String textCode) {
@@ -43,8 +54,42 @@ class SideBar extends StatefulWidget {
 }
 
 class _SideBarState extends State<SideBar> {
+  Future<void> _handleLogout(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.logoutTitle),
+        content: Text(l10n.logoutConfirmContent),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.commonCancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(
+              l10n.logoutTitle,
+              style: const TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      context.read<AuthProvider>().logout();
+      context.go('/login');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final sidebarColor = isDark
+        ? Theme.of(context).cardColor
+        : AppColors.sidebar;
+
     return ChangeNotifierProvider(
       create: (context) => SideBarProvider(),
       child: Consumer<SideBarProvider>(
@@ -59,7 +104,7 @@ class _SideBarState extends State<SideBar> {
               margin: EdgeInsets.all(8),
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
-                color: AppColors.sidebar,
+                color: sidebarColor,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
@@ -72,13 +117,11 @@ class _SideBarState extends State<SideBar> {
                   Material(
                     color: Colors.transparent,
                     child: InkWell(
-                      onTap: state.toggleSidebar,
+                      onTap: () => _handleLogout(context),
                       child: Padding(
                         padding: const EdgeInsets.all(12),
                         child: Icon(
-                          state.expanded
-                              ? Icons.chevron_left
-                              : Icons.chevron_right,
+                          Icons.transit_enterexit,
                           color: Colors.white,
                         ),
                       ),
@@ -107,8 +150,18 @@ class _SidebarGroupWidgetState extends State<SidebarGroupWidget> {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<SideBarProvider>(context);
-    final isExpanded = state.modulesExpanded[widget.module.textCode] ?? false;
+    final currentLocation = GoRouterState.of(context).matchedLocation;
+    final isGroupActive = widget.module.items.any(
+      (item) => item.route == currentLocation,
+    );
+    final isExpanded =
+        state.modulesExpanded[widget.module.textCode] ?? isGroupActive;
     final sidebarCollapsed = !state.expanded;
+    final accentColor = _sidebarAccentColor(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final groupColor = isDark
+        ? Theme.of(context).cardColor
+        : AppColors.sidebarGroup;
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -118,7 +171,7 @@ class _SidebarGroupWidgetState extends State<SidebarGroupWidget> {
       child: Container(
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
-          color: AppColors.sidebarGroup,
+          color: groupColor,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: Colors.white.withValues(alpha: 0.06),
@@ -153,7 +206,10 @@ class _SidebarGroupWidgetState extends State<SidebarGroupWidget> {
                           ? MainAxisAlignment.center
                           : MainAxisAlignment.start,
                       children: [
-                        Icon(widget.module.icon, color: Colors.white),
+                        Icon(
+                          widget.module.icon,
+                          color: isGroupActive ? accentColor : Colors.white,
+                        ),
                         if (state.expanded) ...[
                           const SizedBox(width: 8),
                           Expanded(
@@ -163,8 +219,10 @@ class _SidebarGroupWidgetState extends State<SidebarGroupWidget> {
                                 widget.module.textCode,
                               ),
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Colors.white,
+                              style: TextStyle(
+                                color: isGroupActive
+                                    ? accentColor
+                                    : Colors.white,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -173,9 +231,9 @@ class _SidebarGroupWidgetState extends State<SidebarGroupWidget> {
                             turns: isExpanded ? 0.25 : 0.0,
                             duration: const Duration(milliseconds: 250),
                             curve: Curves.easeInOut,
-                            child: const Icon(
+                            child: Icon(
                               Icons.chevron_right,
-                              color: Colors.white,
+                              color: isGroupActive ? accentColor : Colors.white,
                               size: 16,
                             ),
                           ),
@@ -234,6 +292,14 @@ class _SidebarItemWidgetState extends State<SidebarItemWidget> {
     final state = Provider.of<SideBarProvider>(context, listen: false);
     final currentLocation = GoRouterState.of(context).matchedLocation;
     final isActive = currentLocation == widget.item.route;
+    final accentColor = _sidebarAccentColor(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final selectionColor = isDark
+        ? Colors.white.withValues(alpha: 0.14)
+        : accentColor.withValues(alpha: 0.2);
+    final selectionBorderColor = isDark
+        ? Colors.white.withValues(alpha: 0.24)
+        : accentColor.withValues(alpha: 0.4);
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
@@ -248,13 +314,10 @@ class _SidebarItemWidgetState extends State<SidebarItemWidget> {
             horizontal: state.expanded ? 6 : 2,
           ),
           decoration: BoxDecoration(
-            color: isActive ? AppColors.sidebarItemActive : Colors.transparent,
+            color: isActive ? selectionColor : Colors.transparent,
             borderRadius: BorderRadius.circular(6),
             border: isActive
-                ? Border.all(
-                    color: AppColors.sidebarAccent.withValues(alpha: 0.4),
-                    width: 1,
-                  )
+                ? Border.all(color: selectionBorderColor, width: 1)
                 : null,
           ),
           child: Row(
@@ -264,7 +327,7 @@ class _SidebarItemWidgetState extends State<SidebarItemWidget> {
             children: [
               Icon(
                 widget.item.icon,
-                color: isActive ? AppColors.sidebarAccent : Colors.white,
+                color: isActive ? accentColor : Colors.white,
               ),
               if (state.expanded)
                 Flexible(
@@ -275,7 +338,7 @@ class _SidebarItemWidgetState extends State<SidebarItemWidget> {
                     ),
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: isActive ? AppColors.sidebarAccent : Colors.white,
+                      color: isActive ? accentColor : Colors.white,
                       fontWeight: isActive
                           ? FontWeight.w600
                           : FontWeight.normal,

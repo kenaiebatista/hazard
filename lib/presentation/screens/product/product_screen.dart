@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:hazard/core/errors/app_exception.dart';
 import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/providers/product_provider.dart';
 import 'package:hazard/presentation/screens/product/product_register_screen.dart';
@@ -31,21 +32,23 @@ class _ProductScreenState extends State<ProductScreen> {
       return;
     }
 
+    final l10n = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Excluir produtos'),
-        content: Text(
-          'Deseja excluir ${provider.selectedIds.length} produto(s) selecionado(s)?',
-        ),
+        title: Text(l10n.productDeleteTitle),
+        content: Text(l10n.productDeleteContent(provider.selectedIds.length)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Cancelar'),
+            child: Text(l10n.commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Excluir', style: TextStyle(color: Colors.red)),
+            child: Text(
+              l10n.commonDelete,
+              style: const TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),
@@ -67,9 +70,9 @@ class _ProductScreenState extends State<ProductScreen> {
         padding: const EdgeInsets.only(right: 8, bottom: 8),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: const Color(-15658620)),
+            border: Border.all(color: Theme.of(context).primaryColor),
           ),
           child: Column(
             children: [
@@ -79,7 +82,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   child: Row(
                     children: [
                       Text(
-                        'Lista de ${l10n.productTitle}',
+                        l10n.commonListOf(l10n.productTitle),
                         style: const TextStyle(fontSize: 20),
                       ),
                       const Spacer(),
@@ -98,7 +101,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           provider.isSelecting ? Icons.close : Icons.add,
                           color: provider.isSelecting
                               ? Colors.grey
-                              : const Color(-15658620),
+                              : Theme.of(context).primaryColor,
                         ),
                       ),
                       IconButton(
@@ -116,7 +119,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   ),
                 ),
               ),
-              const Divider(color: Color(-15658620), thickness: 1),
+              Divider(color: Theme.of(context).primaryColor, thickness: 1),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8.0),
@@ -126,7 +129,9 @@ class _ProductScreenState extends State<ProductScreen> {
                         return const Center(child: CircularProgressIndicator());
                       }
                       if (provider.error != null) {
-                        return Center(child: Text(provider.error!));
+                        return Center(
+                          child: Text(describeError(provider.error!, l10n)),
+                        );
                       }
                       if (provider.products.isEmpty) {
                         return Center(child: Text(l10n.productEmpty));
@@ -147,9 +152,14 @@ class _ProductScreenState extends State<ProductScreen> {
                                 ),
                                 title: Text(product.name),
                                 subtitle: Text(
-                                  'SKU: ${product.sku} • ${product.description}',
+                                  l10n.productSubtitle(
+                                    product.sku,
+                                    product.description,
+                                  ),
                                 ),
-                                trailing: Text('Qtd: ${product.amount}'),
+                                trailing: Text(
+                                  l10n.productQuantityShort(product.amount),
+                                ),
                                 onTap: () =>
                                     provider.toggleSelection(product.id),
                               ),
@@ -159,21 +169,30 @@ class _ProductScreenState extends State<ProductScreen> {
                           return Card(
                             margin: const EdgeInsets.all(8),
                             child: ListTile(
-                              leading: const Icon(Icons.inventory_2_outlined),
+                              leading: _ProductThumbnail(
+                                imageUrl: product.imageUrl,
+                              ),
                               title: Text(product.name),
                               subtitle: Text(
-                                'SKU: ${product.sku} • ${product.description}',
+                                l10n.productSubtitle(
+                                  product.sku,
+                                  product.description,
+                                ),
                               ),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text('Qtd: ${product.amount}'),
+                                  Text(
+                                    l10n.stockAmount(product.amount),
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
                                   IconButton(
                                     icon: const Icon(Icons.edit_outlined),
                                     onPressed: () => showDialog(
                                       context: context,
-                                      builder: (_) =>
-                                          ProductRegisterDialog(product: product),
+                                      builder: (_) => ProductRegisterDialog(
+                                        product: product,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -189,6 +208,30 @@ class _ProductScreenState extends State<ProductScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _ProductThumbnail extends StatelessWidget {
+  final String? imageUrl;
+
+  const _ProductThumbnail({required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    if (imageUrl == null || imageUrl!.isEmpty) {
+      return const Icon(Icons.inventory_2_outlined);
+    }
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(6),
+      child: Image.network(
+        imageUrl!,
+        width: 40,
+        height: 40,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) =>
+            const Icon(Icons.inventory_2_outlined),
       ),
     );
   }
