@@ -185,6 +185,11 @@
   "warehouseCapacityLabel": "Capacity",
   "warehouseValidatorCapacityRequired": "Enter a valid capacity",
   "warehouseCancelEdit": "Cancel editing",
+  "warehouseDetailsTitle": "Warehouse Details",
+  "warehouseProductsSectionTitle": "Products in the Warehouse",
+  "warehouseRecentMovementsTitle": "Warehouse Movements",
+  "warehouseNoProductsRegistered": "No products in this warehouse.",
+  "warehouseNoMovementsRegistered": "No movements in this warehouse.",
 
   "dashboardTotalStock": "Total Stock",
   "dashboardEntries7Days": "Entries (7 days)",

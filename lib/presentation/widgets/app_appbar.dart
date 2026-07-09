@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:hazard/core/utils/responsive.dart';
 import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/widgets/app_icon.dart';
 import 'package:hazard/presentation/widgets/settings_dialog.dart';
@@ -29,6 +31,15 @@ class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       scrolledUnderElevation: 0,
       surfaceTintColor: Colors.transparent,
+      leading: context.isMobile
+          ? IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () => context
+                  .read<GlobalKey<ScaffoldState>>()
+                  .currentState
+                  ?.openDrawer(),
+            )
+          : null,
       title: Row(
         spacing: 8,
         children: [

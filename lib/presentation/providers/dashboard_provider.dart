@@ -107,6 +107,21 @@ class DashboardProvider extends ChangeNotifier {
     return sorted.take(limit).toList();
   }
 
+  List<ProductEntity> productsForWarehouse(String warehouseId) {
+    return _products
+        .where((product) => product.warehouseId == warehouseId)
+        .toList();
+  }
+
+  List<MovementEntity> movementsForWarehouse(String warehouseId, {int? limit}) {
+    final filtered =
+        _movements
+            .where((movement) => movement.product.warehouseId == warehouseId)
+            .toList()
+          ..sort((a, b) => b.movementDate.compareTo(a.movementDate));
+    return limit == null ? filtered : filtered.take(limit).toList();
+  }
+
   List<CategoryStockChartData> categoryChartData(String noCategoryLabel) {
     final Map<String, int> totalByCategory = {};
 

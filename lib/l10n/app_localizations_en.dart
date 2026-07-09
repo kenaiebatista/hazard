@@ -345,6 +345,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get warehouseCancelEdit => 'Cancel editing';
 
   @override
+  String get warehouseDetailsTitle => 'Warehouse Details';
+
+  @override
+  String get warehouseProductsSectionTitle => 'Products in the Warehouse';
+
+  @override
+  String get warehouseRecentMovementsTitle => 'Warehouse Movements';
+
+  @override
+  String get warehouseNoProductsRegistered => 'No products in this warehouse.';
+
+  @override
+  String get warehouseNoMovementsRegistered =>
+      'No movements in this warehouse.';
+
+  @override
   String get dashboardTotalStock => 'Total Stock';
 
   @override

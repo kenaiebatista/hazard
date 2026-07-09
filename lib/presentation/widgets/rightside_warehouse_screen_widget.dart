@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:hazard/core/errors/app_exception.dart';
+import 'package:hazard/presentation/errors/error_translator.dart';
 import 'package:hazard/data/datasources/viacep_datasource.dart';
 import 'package:hazard/data/repositories/address_repository_impl.dart';
 import 'package:hazard/domain/entities/warehouse_entity.dart';
@@ -172,6 +172,7 @@ class _WarehouseRightsideWidgetState extends State<WarehouseRightsideWidget> {
                 TextFieldWidget(
                   label: l10n.commonNameLabel,
                   controller: _nameController,
+                  isMandatory: true,
                   keyboardType: TextInputType.name,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -184,6 +185,7 @@ class _WarehouseRightsideWidgetState extends State<WarehouseRightsideWidget> {
                 TextFieldWidget(
                   label: l10n.warehouseCepLabel,
                   controller: _cepController,
+                  isMandatory: false,
                   keyboardType: TextInputType.number,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
@@ -228,6 +230,7 @@ class _WarehouseRightsideWidgetState extends State<WarehouseRightsideWidget> {
                 TextFieldWidget(
                   label: l10n.warehouseStreetLabel,
                   controller: _streetController,
+                  isMandatory: true,
                   keyboardType: TextInputType.streetAddress,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -243,6 +246,7 @@ class _WarehouseRightsideWidgetState extends State<WarehouseRightsideWidget> {
                       child: TextFieldWidget(
                         label: l10n.warehouseNumberLabel,
                         controller: _numberController,
+                        isMandatory: true,
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
@@ -254,6 +258,7 @@ class _WarehouseRightsideWidgetState extends State<WarehouseRightsideWidget> {
                       child: TextFieldWidget(
                         label: l10n.warehouseComplementLabel,
                         controller: _complementController,
+                        isMandatory: false,
                       ),
                     ),
                   ],
@@ -262,6 +267,7 @@ class _WarehouseRightsideWidgetState extends State<WarehouseRightsideWidget> {
                 TextFieldWidget(
                   label: l10n.warehouseNeighborhoodLabel,
                   controller: _neighborhoodController,
+                  isMandatory: true,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return l10n.warehouseValidatorNeighborhoodRequired;
@@ -277,6 +283,7 @@ class _WarehouseRightsideWidgetState extends State<WarehouseRightsideWidget> {
                       child: TextFieldWidget(
                         label: l10n.warehouseCityLabel,
                         controller: _cityController,
+                        isMandatory: true,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return l10n.warehouseValidatorCityRequired;
@@ -291,6 +298,7 @@ class _WarehouseRightsideWidgetState extends State<WarehouseRightsideWidget> {
                       child: TextFieldWidget(
                         label: l10n.warehouseStateLabel,
                         controller: _stateController,
+                        isMandatory: true,
                         inputFormatters: [
                           LengthLimitingTextInputFormatter(2),
                           FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
@@ -309,6 +317,7 @@ class _WarehouseRightsideWidgetState extends State<WarehouseRightsideWidget> {
                 TextFieldWidget(
                   label: l10n.warehouseCapacityLabel,
                   controller: _capacityController,
+                  isMandatory: true,
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || int.tryParse(value.trim()) == null) {

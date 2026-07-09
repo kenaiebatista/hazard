@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hazard/core/theme/app_colors_theme.dart';
+import 'package:hazard/core/utils/responsive.dart';
 import 'package:hazard/domain/entities/sidebar_group_entity.dart';
 import 'package:hazard/domain/entities/sidebar_item_entity.dart';
 import 'package:hazard/l10n/app_localizations.dart';
@@ -83,20 +84,54 @@ class _SideBarState extends State<SideBar> {
     }
   }
 
+  Widget _logoutButton(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => _handleLogout(context),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Icon(Icons.transit_enterexit, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final sidebarColor = isDark
         ? Theme.of(context).cardColor
         : AppColors.sidebar;
+    final isMobile = context.isMobile;
 
     return ChangeNotifierProvider(
       create: (context) => SideBarProvider(),
       child: Consumer<SideBarProvider>(
         builder: (_, state, _) {
+          if (isMobile) {
+            state.expanded = true;
+            return Drawer(
+              backgroundColor: sidebarColor,
+              child: SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (final module in state.modules)
+                      SidebarGroupWidget(module: module),
+                    const Spacer(),
+                    _logoutButton(context),
+                  ],
+                ),
+              ),
+            );
+          }
+
           return MouseRegion(
             onEnter: (_) => setState(() => state.expanded = true),
-            onExit: (_) => setState(() => state.expanded = false),
+            onExit: (_) {
+              if (!state.pinned) setState(() => state.expanded = false);
+            },
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 250),
               curve: Curves.easeInOut,
@@ -111,22 +146,49 @@ class _SideBarState extends State<SideBar> {
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 8,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: state.expanded
+                          ? MainAxisAlignment.start
+                          : MainAxisAlignment.center,
+                      children: [
+                        Material(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(6),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(6),
+                            onTap: () => state.togglePinned(),
+                            child: Padding(
+                              padding: const EdgeInsets.all(6),
+                              child: Icon(
+                                state.pinned
+                                    ? Icons.push_pin
+                                    : Icons.push_pin_outlined,
+                                size: 18,
+                                color: state.pinned
+                                    ? _sidebarAccentColor(context)
+                                    : Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Colors.white.withValues(alpha: 0.12),
+                  ),
+                  const SizedBox(height: 4),
                   for (final module in state.modules)
                     SidebarGroupWidget(module: module),
                   const Spacer(),
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () => _handleLogout(context),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Icon(
-                          Icons.transit_enterexit,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
+                  _logoutButton(context),
                 ],
               ),
             ),

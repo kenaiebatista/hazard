@@ -8,6 +8,7 @@ class TextFieldWidget extends StatelessWidget {
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
   final Widget? suffixIcon;
+  final bool isMandatory;
   final List<TextInputFormatter>? inputFormatters;
   final void Function(String)? onChanged;
 
@@ -15,6 +16,7 @@ class TextFieldWidget extends StatelessWidget {
     super.key,
     required this.label,
     required this.controller,
+    required this.isMandatory,
     this.obscureText = false,
     this.keyboardType = TextInputType.text,
     this.validator,
@@ -33,9 +35,14 @@ class TextFieldWidget extends StatelessWidget {
       inputFormatters: inputFormatters,
       onChanged: onChanged,
       decoration: InputDecoration(
-        labelText: label,
+        label: Text.rich(TextSpan(text: label, children: [
+          if (isMandatory == true) ... [
+            TextSpan(text: ' *', style: TextStyle(color: Colors.red))
+          ]
+        ])),
         suffixIcon: suffixIcon,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+
       ),
     );
   }

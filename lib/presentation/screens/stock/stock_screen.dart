@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:hazard/core/errors/app_exception.dart';
+import 'package:hazard/presentation/errors/error_translator.dart';
 import 'package:hazard/domain/entities/warehouse_entity.dart';
 import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/providers/product_provider.dart';
 import 'package:hazard/presentation/providers/warehouse_provider.dart';
 import 'package:hazard/presentation/widgets/app_appbar.dart';
 import 'package:hazard/presentation/widgets/movement_dialog.dart';
+import 'package:hazard/presentation/widgets/product_thumbnail.dart';
 
 class StockScreen extends StatefulWidget {
   const StockScreen({super.key});
@@ -109,7 +110,9 @@ class _StockScreenState extends State<StockScreen> {
                           return Card(
                             margin: const EdgeInsets.all(8),
                             child: ListTile(
-                              leading: const Icon(Icons.inventory_2_outlined),
+                              leading: ProductThumbnail(
+                                imageUrl: product.imageUrl,
+                              ),
                               title: Text(product.name),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

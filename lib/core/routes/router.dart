@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:hazard/core/utils/responsive.dart';
 import 'package:hazard/presentation/providers/auth_provider.dart';
 import 'package:hazard/presentation/screens/login/login_screen.dart';
 import 'package:hazard/presentation/screens/stock/stock_screen.dart';
@@ -10,6 +12,8 @@ import 'package:hazard/presentation/screens/category/category_screen.dart';
 import 'package:hazard/presentation/widgets/app_sidebar.dart';
 
 GoRouter createAppRouter(AuthProvider authProvider) {
+  final shellScaffoldKey = GlobalKey<ScaffoldState>();
+
   return GoRouter(
     initialLocation: '/stock',
     refreshListenable: authProvider,
@@ -17,19 +21,21 @@ GoRouter createAppRouter(AuthProvider authProvider) {
       GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
       ShellRoute(
         builder: (context, state, child) {
-          return Scaffold(
-            body: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      SideBar(),
-                      Expanded(child: child),
-                    ],
-                  ),
-                ),
-              ],
+          final isMobile = context.isMobile;
+
+          return Provider<GlobalKey<ScaffoldState>>.value(
+            value: shellScaffoldKey,
+            child: Scaffold(
+              key: shellScaffoldKey,
+              drawer: isMobile ? SideBar() : null,
+              body: isMobile
+                  ? child
+                  : Row(
+                      children: [
+                        SideBar(),
+                        Expanded(child: child),
+                      ],
+                    ),
             ),
           );
         },

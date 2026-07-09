@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hazard/core/utils/responsive.dart';
 import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/providers/auth_provider.dart';
 import 'package:hazard/presentation/screens/login/login_screen.dart';
@@ -18,21 +19,21 @@ class CardFormState extends State<CardForm> {
   final _formKey = GlobalKey<FormState>();
 
   final _emailController = TextEditingController();
-  final _senhaController = TextEditingController();
-  final _nomeController = TextEditingController();
-  final _confirmarSenhaController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
-  Future<void> _submit(bool isCadastro, AppLocalizations l10n) async {
+  Future<void> _submit(bool isRegistering, AppLocalizations l10n) async {
     if (!_formKey.currentState!.validate()) return;
 
     final authProvider = context.read<AuthProvider>();
     final email = _emailController.text.trim();
-    final password = _senhaController.text;
+    final password = _passwordController.text;
 
-    if (isCadastro) {
+    if (isRegistering) {
       try {
         await authProvider.register(
-          name: _nomeController.text.trim(),
+          name: _nameController.text.trim(),
           email: email,
           password: password,
         );
@@ -60,9 +61,9 @@ class CardFormState extends State<CardForm> {
   @override
   void dispose() {
     _emailController.dispose();
-    _senhaController.dispose();
-    _nomeController.dispose();
-    _confirmarSenhaController.dispose();
+    _passwordController.dispose();
+    _nameController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -70,12 +71,14 @@ class CardFormState extends State<CardForm> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final state = Provider.of<StateChange>(context);
-    final isCadastro = state.change;
+    final isRegistering = state.change;
 
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 550),
       child: Container(
-        margin: const EdgeInsets.all(64),
+        margin: context.isMobile
+            ? const EdgeInsets.symmetric(horizontal: 16, vertical: 24)
+            : const EdgeInsets.all(64),
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: Theme.of(context).primaryColor, width: 1.5),
@@ -100,9 +103,9 @@ class CardFormState extends State<CardForm> {
                       Align(alignment: Alignment.centerLeft, child: MainIcon()),
                       Padding(
                         padding: const EdgeInsets.only(left: 8),
-                        child: (!isCadastro)
+                        child: (!isRegistering)
                             ? AnimatedOpacity(
-                                opacity: isCadastro ? 0.0 : 1.0,
+                                opacity: isRegistering ? 0.0 : 1.0,
                                 duration: const Duration(milliseconds: 300),
                                 curve: Curves.easeInOut,
                                 child: Text(
@@ -114,7 +117,7 @@ class CardFormState extends State<CardForm> {
                                 ),
                               )
                             : AnimatedOpacity(
-                                opacity: isCadastro ? 1.0 : 0.0,
+                                opacity: isRegistering ? 1.0 : 0.0,
                                 duration: const Duration(milliseconds: 300),
                                 curve: Curves.easeInOut,
                                 child: Text(
@@ -133,17 +136,18 @@ class CardFormState extends State<CardForm> {
                     firstCurve: Curves.easeInOut,
                     secondCurve: Curves.easeInOut,
                     sizeCurve: Curves.easeInOut,
-                    crossFadeState: isCadastro
+                    crossFadeState: isRegistering
                         ? CrossFadeState.showFirst
                         : CrossFadeState.showSecond,
                     firstChild: Padding(
                       padding: const EdgeInsets.only(top: 6.0, bottom: 0),
                       child: TextFieldWidget(
                         label: l10n.loginFieldName,
-                        controller: _nomeController,
+                        controller: _nameController,
+                        isMandatory: true,
                         keyboardType: TextInputType.name,
                         validator: (value) {
-                          if (!isCadastro) return null;
+                          if (!isRegistering) return null;
                           if (value == null || value.isEmpty) {
                             return l10n.loginValidatorNameRequired;
                           }
@@ -157,6 +161,7 @@ class CardFormState extends State<CardForm> {
                     label: l10n.loginFieldEmail,
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
+                    isMandatory: false,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return l10n.loginValidatorEmailRequired;
@@ -168,8 +173,9 @@ class CardFormState extends State<CardForm> {
                   ),
                   TextFieldWidget(
                     label: l10n.loginFieldPassword,
-                    controller: _senhaController,
+                    controller: _passwordController,
                     keyboardType: TextInputType.visiblePassword,
+                    isMandatory: false,
                     obscureText: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -185,22 +191,23 @@ class CardFormState extends State<CardForm> {
                     firstCurve: Curves.easeInOut,
                     secondCurve: Curves.easeInOut,
                     sizeCurve: Curves.easeInOut,
-                    crossFadeState: isCadastro
+                    crossFadeState: isRegistering
                         ? CrossFadeState.showFirst
                         : CrossFadeState.showSecond,
                     firstChild: Padding(
                       padding: const EdgeInsets.only(top: 4.0),
                       child: TextFieldWidget(
                         label: l10n.loginFieldConfirmPassword,
-                        controller: _confirmarSenhaController,
+                        controller: _confirmPasswordController,
+                        isMandatory: true,
                         keyboardType: TextInputType.visiblePassword,
                         obscureText: true,
                         validator: (value) {
-                          if (!isCadastro) return null;
+                          if (!isRegistering) return null;
                           if (value == null || value.isEmpty) {
                             return l10n.loginValidatorConfirmPasswordRequired;
                           }
-                          if (value != _senhaController.text) {
+                          if (value != _passwordController.text) {
                             return l10n.loginValidatorPasswordMismatch;
                           }
                           return null;
@@ -213,7 +220,7 @@ class CardFormState extends State<CardForm> {
                     color: Colors.transparent,
                     child: InkWell(
                       borderRadius: BorderRadius.circular(15),
-                      onTap: () => _submit(isCadastro, l10n),
+                      onTap: () => _submit(isRegistering, l10n),
                       child: Ink(
                         height: 40,
                         width: 200,
@@ -225,10 +232,10 @@ class CardFormState extends State<CardForm> {
                           child: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 750),
                             child: Text(
-                              isCadastro
+                              isRegistering
                                   ? l10n.loginButtonRegister
                                   : l10n.loginButtonSignIn,
-                              key: ValueKey(isCadastro),
+                              key: ValueKey(isRegistering),
                               style: const TextStyle(color: Colors.white),
                             ),
                           ),
@@ -242,10 +249,10 @@ class CardFormState extends State<CardForm> {
                       child: AnimatedSwitcher(
                         duration: const Duration(milliseconds: 750),
                         child: Text(
-                          isCadastro
+                          isRegistering
                               ? l10n.loginLinkHaveAccount
                               : l10n.loginLinkRegister,
-                          key: ValueKey(isCadastro),
+                          key: ValueKey(isRegistering),
                         ),
                       ),
                     ),

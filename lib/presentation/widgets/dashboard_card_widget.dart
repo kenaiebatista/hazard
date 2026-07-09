@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hazard/core/utils/responsive.dart';
 
 class DashboardCard extends StatelessWidget {
   final String title;
@@ -14,43 +15,50 @@ class DashboardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = context.isMobile;
+
     return Card(
       elevation: 2,
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(isMobile ? 12 : 20),
         child: Row(
           children: [
 
             Icon(
               icon,
-              size: 40,
+              size: isMobile ? 26 : 40,
               color: Colors.blue,
             ),
 
-            const SizedBox(width: 16),
+            SizedBox(width: isMobile ? 10 : 16),
 
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
 
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
+                  Text(
+                    title,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: isMobile ? 12 : 16,
+                      color: Colors.grey,
+                    ),
                   ),
-                ),
 
-                const SizedBox(height: 8),
+                  SizedBox(height: isMobile ? 4 : 8),
 
-                Text(
-                  value,
-                  style: const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
+                  Text(
+                    value,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: isMobile ? 18 : 28,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             )
           ],
         ),

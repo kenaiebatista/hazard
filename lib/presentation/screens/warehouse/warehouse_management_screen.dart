@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hazard/core/utils/responsive.dart';
 import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/providers/dashboard_provider.dart';
 import 'package:hazard/presentation/widgets/app_appbar.dart';
@@ -44,67 +45,103 @@ class _WarehouseDashboardState extends State<WarehouseDashboard> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final dashboardProvider = context.watch<DashboardProvider>();
+    final isMobile = context.isMobile;
+
+    final cards = [
+      DashboardCard(
+        title: l10n.dashboardTotalStock,
+        value: '${dashboardProvider.totalStock}',
+        icon: Icons.inventory_2,
+      ),
+      DashboardCard(
+        title: l10n.dashboardEntries7Days,
+        value: '${dashboardProvider.entriesLast7Days}',
+        icon: Icons.arrow_downward,
+      ),
+      DashboardCard(
+        title: l10n.dashboardExits7Days,
+        value: '${dashboardProvider.exitsLast7Days}',
+        icon: Icons.arrow_upward,
+      ),
+      DashboardCard(
+        title: l10n.dashboardReturns,
+        value: '${dashboardProvider.returnsCount}',
+        icon: Icons.keyboard_return,
+      ),
+    ];
+
+    final statsSection = isMobile
+        ? Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(child: cards[0]),
+                  const SizedBox(width: 16),
+                  Expanded(child: cards[1]),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(child: cards[2]),
+                  const SizedBox(width: 16),
+                  Expanded(child: cards[3]),
+                ],
+              ),
+            ],
+          )
+        : Row(
+            children: [
+              Expanded(child: cards[0]),
+              const SizedBox(width: 16),
+              Expanded(child: cards[1]),
+              const SizedBox(width: 16),
+              Expanded(child: cards[2]),
+              const SizedBox(width: 16),
+              Expanded(child: cards[3]),
+            ],
+          );
+
+    final chartsSection = isMobile
+        ? Column(
+            children: [
+              RecentMovementsWidget(),
+              const SizedBox(height: 20),
+              MovementChart(),
+              const SizedBox(height: 20),
+              WarehouseStockChart(),
+              const SizedBox(height: 20),
+              CategoryStockChart(),
+            ],
+          )
+        : Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(child: RecentMovementsWidget()),
+                  const SizedBox(width: 20),
+                  Expanded(child: MovementChart()),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(child: WarehouseStockChart()),
+                  const SizedBox(width: 20),
+                  Expanded(child: CategoryStockChart()),
+                ],
+              ),
+            ],
+          );
 
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: DashboardCard(
-                  title: l10n.dashboardTotalStock,
-                  value: '${dashboardProvider.totalStock}',
-                  icon: Icons.inventory_2,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: DashboardCard(
-                  title: l10n.dashboardEntries7Days,
-                  value: '${dashboardProvider.entriesLast7Days}',
-                  icon: Icons.arrow_downward,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: DashboardCard(
-                  title: l10n.dashboardExits7Days,
-                  value: '${dashboardProvider.exitsLast7Days}',
-                  icon: Icons.arrow_upward,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: DashboardCard(
-                  title: l10n.dashboardReturns,
-                  value: '${dashboardProvider.returnsCount}',
-                  icon: Icons.keyboard_return,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 25),
-
-          Row(
-            children: [
-              Expanded(child: RecentMovementsWidget(),),
-              SizedBox(width: 20),
-
-              Expanded(child: MovementChart()),
-            ],
-          ),
-
-          Row(
-            children: [
-              Expanded(child: WarehouseStockChart()),
-
-              SizedBox(width: 20),
-              Expanded(child: CategoryStockChart()),
-            ],
-          ),
-          SizedBox(height: 20),
-          
+          statsSection,
+          const SizedBox(height: 25),
+          chartsSection,
+          const SizedBox(height: 20),
         ],
       ),
     );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hazard/core/errors/app_exception.dart';
+import 'package:hazard/presentation/errors/error_translator.dart';
 import 'package:hazard/domain/entities/category_entity.dart';
 import 'package:hazard/domain/entities/product_entity.dart';
 import 'package:hazard/domain/entities/subcategory_entity.dart';
@@ -8,6 +8,7 @@ import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/providers/category_provider.dart';
 import 'package:hazard/presentation/providers/product_provider.dart';
 import 'package:hazard/presentation/providers/warehouse_provider.dart';
+import 'package:hazard/presentation/widgets/app_dropdown_field_widget.dart';
 import 'package:hazard/presentation/widgets/app_text_field_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -181,6 +182,7 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
                     label: l10n.commonNameLabel,
                     controller: _nameController,
                     keyboardType: TextInputType.name,
+                    isMandatory: true,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return l10n.commonValidatorNameRequired;
@@ -191,6 +193,7 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
                   TextFieldWidget(
                     label: l10n.commonDescriptionLabel,
                     controller: _descriptionController,
+                    isMandatory: true,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return l10n.commonValidatorDescriptionRequired;
@@ -201,6 +204,7 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
                   TextFieldWidget(
                     label: l10n.productSkuLabel,
                     controller: _skuController,
+                    isMandatory: true,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return l10n.productValidatorSkuRequired;
@@ -211,6 +215,7 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
                   TextFieldWidget(
                     label: l10n.productImageUrlLabel,
                     controller: _imageUrlController,
+                    isMandatory: false,
                     keyboardType: TextInputType.url,
                     validator: (value) {
                       final trimmed = value?.trim() ?? '';
@@ -222,12 +227,10 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
                       return null;
                     },
                   ),
-                  DropdownButtonFormField<CategoryEntity>(
-                    initialValue: _selectedCategory,
-                    decoration: InputDecoration(
-                      labelText: l10n.productCategoryLabel,
-                      border: const OutlineInputBorder(),
-                    ),
+                  DropdownFieldWidget<CategoryEntity>(
+                    label: l10n.productCategoryLabel,
+                    value: _selectedCategory,
+                    isMandatory: true,
                     items: categories.map((category) {
                       return DropdownMenuItem<CategoryEntity>(
                         value: category,
@@ -247,12 +250,10 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
                       return null;
                     },
                   ),
-                  DropdownButtonFormField<SubcategoryEntity>(
-                    initialValue: _selectedSubcategory,
-                    decoration: InputDecoration(
-                      labelText: l10n.commonSubcategoryLabel,
-                      border: const OutlineInputBorder(),
-                    ),
+                  DropdownFieldWidget<SubcategoryEntity>(
+                    label: l10n.commonSubcategoryLabel,
+                    value: _selectedSubcategory,
+                    isMandatory: true,
                     items: subcategories.map((subcategory) {
                       return DropdownMenuItem<SubcategoryEntity>(
                         value: subcategory,
@@ -271,12 +272,10 @@ class _ProductRegisterDialogState extends State<ProductRegisterDialog> {
                       return null;
                     },
                   ),
-                  DropdownButtonFormField<WarehouseEntity>(
-                    initialValue: _selectedWarehouse,
-                    decoration: InputDecoration(
-                      labelText: l10n.warehouseTitle,
-                      border: const OutlineInputBorder(),
-                    ),
+                  DropdownFieldWidget<WarehouseEntity>(
+                    label: l10n.warehouseTitle,
+                    value: _selectedWarehouse,
+                    isMandatory: true,
                     items: warehouses.map((warehouse) {
                       return DropdownMenuItem<WarehouseEntity>(
                         value: warehouse,

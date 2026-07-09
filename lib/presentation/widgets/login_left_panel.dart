@@ -23,7 +23,6 @@ class LeftPanel extends StatelessWidget {
       ),
       duration: const Duration(milliseconds: 700),
       curve: Curves.easeInOut,
-      width: 500,
     );
   }
 }

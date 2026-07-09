@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:hazard/core/errors/app_exception.dart';
+import 'package:hazard/presentation/errors/error_translator.dart';
 import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/providers/category_provider.dart';
 import 'package:hazard/presentation/screens/category/category_register_screen.dart';

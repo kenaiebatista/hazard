@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:hazard/core/errors/app_exception.dart';
+import 'package:hazard/presentation/errors/error_translator.dart';
 import 'package:hazard/domain/entities/movement_entity.dart';
 import 'package:hazard/domain/entities/product_entity.dart';
 import 'package:hazard/domain/enums/movement_type.dart';
@@ -8,7 +8,10 @@ import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/providers/movement_provider.dart';
 import 'package:hazard/presentation/providers/product_provider.dart';
 import 'package:hazard/presentation/providers/warehouse_provider.dart';
+import 'package:hazard/presentation/widgets/app_dropdown_field_widget.dart';
 import 'package:hazard/presentation/widgets/app_text_field_widget.dart';
+import 'package:hazard/presentation/widgets/movement_details_dialog.dart';
+import 'package:hazard/presentation/widgets/movement_leading_indicator.dart';
 import 'package:hazard/presentation/widgets/movement_menu_button.dart';
 
 enum _MovementView { menu, add, editList, editForm, removeList, returnList }
@@ -329,12 +332,10 @@ class _MovementFormState extends State<_MovementForm> {
         child: Column(
           spacing: 16,
           children: [
-            DropdownButtonFormField<String>(
-              initialValue: _selectedProductName,
-              decoration: InputDecoration(
-                labelText: l10n.productTitle,
-                border: const OutlineInputBorder(),
-              ),
+            DropdownFieldWidget<String>(
+              label: l10n.productTitle,
+              value: _selectedProductName,
+              isMandatory: true,
               items: productNames.map((name) {
                 return DropdownMenuItem<String>(value: name, child: Text(name));
               }).toList(),
@@ -356,12 +357,10 @@ class _MovementFormState extends State<_MovementForm> {
                 return null;
               },
             ),
-            DropdownButtonFormField<ProductEntity>(
-              initialValue: _selectedProduct,
-              decoration: InputDecoration(
-                labelText: l10n.warehouseTitle,
-                border: const OutlineInputBorder(),
-              ),
+            DropdownFieldWidget<ProductEntity>(
+              label: l10n.warehouseTitle,
+              value: _selectedProduct,
+              isMandatory: true,
               items: warehouseOptions.map((product) {
                 return DropdownMenuItem<ProductEntity>(
                   value: product,
@@ -381,6 +380,7 @@ class _MovementFormState extends State<_MovementForm> {
             TextFieldWidget(
               label: l10n.commonDescriptionLabel,
               controller: _descriptionController,
+              isMandatory: true,
             ),
             Material(
               color: Colors.transparent,
@@ -400,6 +400,7 @@ class _MovementFormState extends State<_MovementForm> {
             TextFieldWidget(
               label: l10n.movementQuantityLabel,
               controller: _quantityController,
+              isMandatory: true,
               keyboardType: TextInputType.number,
               validator: (value) {
                 final parsed = int.tryParse(value?.trim() ?? '');
@@ -597,18 +598,14 @@ class _MovementList extends StatelessWidget {
       itemCount: movements.length,
       itemBuilder: (context, index) {
         final movement = movements[index];
-        final isEntry = movement.type == MovementType.entry;
 
         return Card(
           margin: const EdgeInsets.only(bottom: 8),
           child: ListTile(
-            leading: Icon(
-              isEntry ? Icons.arrow_downward : Icons.arrow_upward,
-              color: isEntry ? Colors.green : Colors.red,
-            ),
+            leading: MovementLeadingIndicator(movement: movement),
             title: Text(movement.product.name),
             subtitle: Text(
-              '${_formatDate(movement.movementDate)} • '
+              '${formatMovementDate(movement.movementDate)} • '
               '${l10n.movementQtyInlineLabel}: ${movement.quantity}'
               '${movement.observation != null && movement.observation!.isNotEmpty ? ' • ${movement.observation}' : ''}'
               '${movement.returned ? ' • ${l10n.movementReturnedTag}' : ''}',
@@ -624,9 +621,13 @@ class _MovementList extends StatelessWidget {
                     onPressed: () => _confirmReturn(context, movement),
                   )
                 : const Icon(Icons.chevron_right),
-            onTap: (removeMode || returnMode)
-                ? null
-                : () => onTapMovement?.call(movement),
+            onTap: () {
+              if (removeMode || returnMode) {
+                showMovementDetailsDialog(context, movement);
+              } else {
+                onTapMovement?.call(movement);
+              }
+            },
           ),
         );
       },

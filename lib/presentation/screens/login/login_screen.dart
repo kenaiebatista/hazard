@@ -24,26 +24,16 @@ class LoginScreen extends StatelessWidget {
       child: Consumer<StateChange>(
         builder: (_, state, _) {
           return Scaffold(
-            body: Center(
-              child: Row(
-                children: [
-                  Expanded(child: LeftPanel()),
-                  Expanded(
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        return SingleChildScrollView(
-                          child: ConstrainedBox(
-                            constraints: BoxConstraints(
-                              minHeight: constraints.maxHeight,
-                            ),
-                            child: Center(child: CardForm()),
-                          ),
-                        );
-                      },
-                    ),
+            body: Stack(
+              children: [
+                const Positioned.fill(child: LeftPanel()),
+                Center(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(vertical: 24),
+                    child: CardForm(),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
         },

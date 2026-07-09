@@ -10,6 +10,7 @@ class SideBarProvider extends ChangeNotifier {
 
   final modules = <SidebarGroup>[];
   var expanded = false;
+  var pinned = false;
 
   final modulesExpanded = <String, bool>{};
 
@@ -17,6 +18,12 @@ class SideBarProvider extends ChangeNotifier {
 
   void toggleSidebar() {
     expanded = !expanded;
+    notifyListeners();
+  }
+
+  void togglePinned() {
+    pinned = !pinned;
+    if (pinned) expanded = true;
     notifyListeners();
   }
 

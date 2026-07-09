@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:hazard/core/errors/app_exception.dart';
+import 'package:hazard/presentation/errors/error_translator.dart';
 import 'package:hazard/domain/entities/category_entity.dart';
 import 'package:hazard/domain/entities/subcategory_entity.dart';
 import 'package:hazard/l10n/app_localizations.dart';
@@ -131,6 +131,7 @@ class _CategoryRegisterDialogState extends State<CategoryRegisterDialog> {
                 TextFieldWidget(
                   label: l10n.commonNameLabel,
                   controller: _nameController,
+                  isMandatory: true,
                   keyboardType: TextInputType.name,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -143,6 +144,7 @@ class _CategoryRegisterDialogState extends State<CategoryRegisterDialog> {
                 TextFieldWidget(
                   label: l10n.commonSubcategoryLabel,
                   controller: _subcategoryController,
+                  isMandatory: true,
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.add),
                     onPressed: _addSubcategory,
@@ -208,7 +210,9 @@ class _CategoryRegisterDialogState extends State<CategoryRegisterDialog> {
                                 ),
                               )
                             : Text(
-                                _isEditing ? l10n.commonUpdate : l10n.commonSave,
+                                _isEditing
+                                    ? l10n.commonUpdate
+                                    : l10n.commonSave,
                                 style: const TextStyle(
                                   fontSize: 18,
                                   color: Colors.white,

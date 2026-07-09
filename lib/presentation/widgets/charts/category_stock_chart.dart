@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hazard/core/utils/responsive.dart';
 import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/providers/dashboard_provider.dart';
 import 'package:hazard/presentation/widgets/charts/chart_colors.dart';
@@ -41,10 +42,57 @@ class CategoryStockChart extends StatelessWidget {
         ),
     ];
 
+    final isMobile = context.isMobile;
+
+    final pieChart = SfCircularChart(
+      title: ChartTitle(text: l10n.chartCategoryTitle),
+      series: <CircularSeries>[
+        PieSeries<_CategorySlice, String>(
+          dataSource: slices,
+          xValueMapper: (d, _) => d.category,
+          yValueMapper: (d, _) => d.quantity,
+          pointColorMapper: (d, _) => d.color,
+          dataLabelMapper: (d, _) => '${d.percentage.toStringAsFixed(0)}%',
+          dataLabelSettings: const DataLabelSettings(isVisible: true),
+        ),
+      ],
+    );
+
+    final legend = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (final slice in slices)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              children: [
+                Container(
+                  width: 10,
+                  height: 10,
+                  decoration: BoxDecoration(
+                    color: slice.color,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    '${slice.category} (${slice.quantity})',
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+
     return Card(
       elevation: 3,
-      child: Container(
-        height: 361,
+      child: SizedBox(
+        height: isMobile ? 520 : 361,
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: slices.isEmpty
@@ -54,62 +102,24 @@ class CategoryStockChart extends StatelessWidget {
                     child: Text(l10n.chartNoProductsRegistered),
                   ),
                 )
-              : Row(
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: SfCircularChart(
-                        title: ChartTitle(text: l10n.chartCategoryTitle),
-                        series: <CircularSeries>[
-                          PieSeries<_CategorySlice, String>(
-                            dataSource: slices,
-                            xValueMapper: (d, _) => d.category,
-                            yValueMapper: (d, _) => d.quantity,
-                            pointColorMapper: (d, _) => d.color,
-                            dataLabelMapper: (d, _) =>
-                                '${d.percentage.toStringAsFixed(0)}%',
-                            dataLabelSettings: const DataLabelSettings(
-                              isVisible: true,
-                            ),
-                          ),
-                        ],
-                      ),
+              : isMobile
+                  ? Column(
+                      children: [
+                        Expanded(flex: 3, child: pieChart),
+                        const SizedBox(height: 8),
+                        Expanded(
+                          flex: 2,
+                          child: SingleChildScrollView(child: legend),
+                        ),
+                      ],
+                    )
+                  : Row(
+                      children: [
+                        Expanded(flex: 3, child: pieChart),
+                        const SizedBox(width: 16),
+                        Expanded(flex: 2, child: legend),
+                      ],
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          for (final slice in slices)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 10,
-                                    height: 10,
-                                    decoration: BoxDecoration(
-                                      color: slice.color,
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      '${slice.category} (${slice.quantity})',
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
         ),
       ),
     );

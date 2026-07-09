@@ -712,6 +712,36 @@ abstract class AppLocalizations {
   /// **'Cancelar edição'**
   String get warehouseCancelEdit;
 
+  /// No description provided for @warehouseDetailsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Detalhes do Galpão'**
+  String get warehouseDetailsTitle;
+
+  /// No description provided for @warehouseProductsSectionTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Produtos no Galpão'**
+  String get warehouseProductsSectionTitle;
+
+  /// No description provided for @warehouseRecentMovementsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Movimentações do Galpão'**
+  String get warehouseRecentMovementsTitle;
+
+  /// No description provided for @warehouseNoProductsRegistered.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum produto neste galpão.'**
+  String get warehouseNoProductsRegistered;
+
+  /// No description provided for @warehouseNoMovementsRegistered.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma movimentação neste galpão.'**
+  String get warehouseNoMovementsRegistered;
+
   /// No description provided for @dashboardTotalStock.
   ///
   /// In pt, this message translates to:

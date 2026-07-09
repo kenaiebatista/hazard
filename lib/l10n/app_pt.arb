@@ -185,6 +185,11 @@
   "warehouseCapacityLabel": "Capacidade",
   "warehouseValidatorCapacityRequired": "Informe uma capacidade válida",
   "warehouseCancelEdit": "Cancelar edição",
+  "warehouseDetailsTitle": "Detalhes do Galpão",
+  "warehouseProductsSectionTitle": "Produtos no Galpão",
+  "warehouseRecentMovementsTitle": "Movimentações do Galpão",
+  "warehouseNoProductsRegistered": "Nenhum produto neste galpão.",
+  "warehouseNoMovementsRegistered": "Nenhuma movimentação neste galpão.",
 
   "dashboardTotalStock": "Estoque Geral",
   "dashboardEntries7Days": "Entrada (7 dias)",

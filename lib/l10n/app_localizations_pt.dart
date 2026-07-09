@@ -348,6 +348,22 @@ class AppLocalizationsPt extends AppLocalizations {
   String get warehouseCancelEdit => 'Cancelar edição';
 
   @override
+  String get warehouseDetailsTitle => 'Detalhes do Galpão';
+
+  @override
+  String get warehouseProductsSectionTitle => 'Produtos no Galpão';
+
+  @override
+  String get warehouseRecentMovementsTitle => 'Movimentações do Galpão';
+
+  @override
+  String get warehouseNoProductsRegistered => 'Nenhum produto neste galpão.';
+
+  @override
+  String get warehouseNoMovementsRegistered =>
+      'Nenhuma movimentação neste galpão.';
+
+  @override
   String get dashboardTotalStock => 'Estoque Geral';
 
   @override

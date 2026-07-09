@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:hazard/core/errors/app_exception.dart';
+import 'package:hazard/presentation/errors/error_translator.dart';
 import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/providers/product_provider.dart';
 import 'package:hazard/presentation/screens/product/product_register_screen.dart';
 import 'package:hazard/presentation/widgets/app_appbar.dart';
+import 'package:hazard/presentation/widgets/product_thumbnail.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({super.key});
@@ -169,7 +170,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           return Card(
                             margin: const EdgeInsets.all(8),
                             child: ListTile(
-                              leading: _ProductThumbnail(
+                              leading: ProductThumbnail(
                                 imageUrl: product.imageUrl,
                               ),
                               title: Text(product.name),
@@ -208,30 +209,6 @@ class _ProductScreenState extends State<ProductScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _ProductThumbnail extends StatelessWidget {
-  final String? imageUrl;
-
-  const _ProductThumbnail({required this.imageUrl});
-
-  @override
-  Widget build(BuildContext context) {
-    if (imageUrl == null || imageUrl!.isEmpty) {
-      return const Icon(Icons.inventory_2_outlined);
-    }
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(6),
-      child: Image.network(
-        imageUrl!,
-        width: 40,
-        height: 40,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) =>
-            const Icon(Icons.inventory_2_outlined),
       ),
     );
   }
