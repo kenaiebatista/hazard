@@ -274,11 +274,17 @@ abstract class AppLocalizations {
   /// **'Armazém'**
   String get sidebarModuleWarehouse;
 
-  /// No description provided for @sidebarModuleCategory.
+  /// No description provided for @sidebarModuleStock.
   ///
   /// In pt, this message translates to:
-  /// **'Categoria'**
-  String get sidebarModuleCategory;
+  /// **'Estoque'**
+  String get sidebarModuleStock;
+
+  /// No description provided for @sidebarModuleProduct.
+  ///
+  /// In pt, this message translates to:
+  /// **'Produtos'**
+  String get sidebarModuleProduct;
 
   /// No description provided for @categoryTitle.
   ///

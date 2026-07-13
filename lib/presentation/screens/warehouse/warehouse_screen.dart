@@ -7,6 +7,8 @@ import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/providers/dashboard_provider.dart';
 import 'package:hazard/presentation/providers/warehouse_provider.dart';
 import 'package:hazard/presentation/widgets/app_appbar.dart';
+import 'package:hazard/presentation/widgets/icon_square_widget.dart';
+import 'package:hazard/presentation/widgets/info_badge_widget.dart';
 import 'package:hazard/presentation/widgets/rightside_warehouse_screen_widget.dart';
 import 'package:hazard/presentation/widgets/warehouse_details_dialog.dart';
 
@@ -179,29 +181,33 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
                     value: provider.isSelected(warehouse.id),
                     onChanged: (_) => provider.toggleSelection(warehouse.id),
                   )
-                : const Icon(Icons.warehouse),
+                : const IconSquareWidget(icon: Icons.warehouse),
             title: Text(warehouse.name),
-            subtitle: Text(warehouse.address),
+            subtitle: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    warehouse.address,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                InfoBadgeWidget(
+                  label: l10n.warehouseCapacity(warehouse.capacity),
+                ),
+              ],
+            ),
             trailing: provider.isSelecting
-                ? Text(l10n.warehouseCapacity(warehouse.capacity))
-                : Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        l10n.warehouseCapacity(warehouse.capacity),
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.edit_outlined),
-                        onPressed: () {
-                          if (isDesktop) {
-                            setState(() => _editingWarehouse = warehouse);
-                          } else {
-                            _openWarehouseFormDialog(warehouse: warehouse);
-                          }
-                        },
-                      ),
-                    ],
+                ? null
+                : IconButton(
+                    icon: const Icon(Icons.edit_outlined),
+                    onPressed: () {
+                      if (isDesktop) {
+                        setState(() => _editingWarehouse = warehouse);
+                      } else {
+                        _openWarehouseFormDialog(warehouse: warehouse);
+                      }
+                    },
                   ),
             onTap: provider.isSelecting
                 ? () => provider.toggleSelection(warehouse.id)

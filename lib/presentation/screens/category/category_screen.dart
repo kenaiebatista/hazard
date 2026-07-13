@@ -5,6 +5,7 @@ import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/providers/category_provider.dart';
 import 'package:hazard/presentation/screens/category/category_register_screen.dart';
 import 'package:hazard/presentation/widgets/app_appbar.dart';
+import 'package:hazard/presentation/widgets/icon_square_widget.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});
@@ -165,7 +166,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           return Card(
                             margin: const EdgeInsets.all(8),
                             child: ExpansionTile(
-                              leading: const Icon(Icons.category_outlined),
+                              leading: const IconSquareWidget(
+                                icon: Icons.category_outlined,
+                              ),
                               title: Row(
                                 children: [
                                   Expanded(child: Text(category.name)),

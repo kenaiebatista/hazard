@@ -38,7 +38,8 @@
   "warehouseManageTitle": "Gerenciar Armazém",
 
   "sidebarModuleWarehouse": "Armazém",
-  "sidebarModuleCategory": "Categoria",
+  "sidebarModuleStock": "Estoque",
+  "sidebarModuleProduct": "Produtos",
 
   "categoryTitle": "Categoria",
   "categoryEmpty": "Nenhuma categoria cadastrada.",

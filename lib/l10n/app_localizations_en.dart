@@ -99,7 +99,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sidebarModuleWarehouse => 'Warehouse';
 
   @override
-  String get sidebarModuleCategory => 'Category';
+  String get sidebarModuleStock => 'Stock';
+
+  @override
+  String get sidebarModuleProduct => 'Products';
 
   @override
   String get categoryTitle => 'Category';

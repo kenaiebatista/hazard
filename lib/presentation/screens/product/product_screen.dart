@@ -5,6 +5,7 @@ import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/providers/product_provider.dart';
 import 'package:hazard/presentation/screens/product/product_register_screen.dart';
 import 'package:hazard/presentation/widgets/app_appbar.dart';
+import 'package:hazard/presentation/widgets/info_badge_widget.dart';
 import 'package:hazard/presentation/widgets/product_thumbnail.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -152,14 +153,24 @@ class _ProductScreenState extends State<ProductScreen> {
                                       provider.toggleSelection(product.id),
                                 ),
                                 title: Text(product.name),
-                                subtitle: Text(
-                                  l10n.productSubtitle(
-                                    product.sku,
-                                    product.description,
-                                  ),
-                                ),
-                                trailing: Text(
-                                  l10n.productQuantityShort(product.amount),
+                                subtitle: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        l10n.productSubtitle(
+                                          product.sku,
+                                          product.description,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    InfoBadgeWidget(
+                                      label: l10n.productQuantityShort(
+                                        product.amount,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 onTap: () =>
                                     provider.toggleSelection(product.id),
@@ -174,29 +185,31 @@ class _ProductScreenState extends State<ProductScreen> {
                                 imageUrl: product.imageUrl,
                               ),
                               title: Text(product.name),
-                              subtitle: Text(
-                                l10n.productSubtitle(
-                                  product.sku,
-                                  product.description,
-                                ),
-                              ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
+                              subtitle: Row(
                                 children: [
-                                  Text(
-                                    l10n.stockAmount(product.amount),
-                                    style: const TextStyle(fontSize: 14),
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.edit_outlined),
-                                    onPressed: () => showDialog(
-                                      context: context,
-                                      builder: (_) => ProductRegisterDialog(
-                                        product: product,
+                                  Expanded(
+                                    child: Text(
+                                      l10n.productSubtitle(
+                                        product.sku,
+                                        product.description,
                                       ),
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
+                                  const SizedBox(width: 8),
+                                  InfoBadgeWidget(
+                                    label: l10n.stockAmount(product.amount),
+                                  ),
                                 ],
+                              ),
+                              trailing: IconButton(
+                                icon: const Icon(Icons.edit_outlined),
+                                onPressed: () => showDialog(
+                                  context: context,
+                                  builder: (_) => ProductRegisterDialog(
+                                    product: product,
+                                  ),
+                                ),
                               ),
                             ),
                           );

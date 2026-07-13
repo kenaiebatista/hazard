@@ -35,7 +35,8 @@ class SideBarProvider extends ChangeNotifier {
   void _init() async {
     final json = {
       'modulo1': ['warehouse', 'warehouse_manage'],
-      'modulo2': ['stock', 'product', 'category'],
+      'modulo2': ['stock'],
+      'modulo3': ['product', 'category'],
     };
 
     for (final key in json.keys) {
@@ -46,7 +47,7 @@ class SideBarProvider extends ChangeNotifier {
           module = SidebarGroup(
             textCode: key,
             title: 'Armazém',
-            icon: Icons.pie_chart_outline,
+            icon: Icons.warehouse,
             items: [],
           );
 
@@ -59,12 +60,12 @@ class SideBarProvider extends ChangeNotifier {
               case 'warehouse':
                 itemName = 'Armazém';
                 itemRoute = '/warehouse';
-                itemIcon = Icons.warehouse;
+                itemIcon = Icons.list_alt;
                 break;
               case 'warehouse_manage':
                 itemName = 'Gestão';
                 itemRoute = '/warehouse/management';
-                itemIcon = Icons.manage_accounts_rounded;
+                itemIcon = Icons.dashboard_outlined;
                 break;
             }
 
@@ -85,8 +86,8 @@ class SideBarProvider extends ChangeNotifier {
         case 'modulo2':
           module = SidebarGroup(
             textCode: key,
-            title: 'Categoria',
-            icon: Icons.category_outlined,
+            title: 'Estoque',
+            icon: Icons.inventory,
             items: [],
           );
 
@@ -99,17 +100,47 @@ class SideBarProvider extends ChangeNotifier {
               case 'stock':
                 itemName = 'Estoque';
                 itemRoute = '/stock';
-                itemIcon = Icons.warehouse;
+                itemIcon = Icons.swap_horiz;
                 break;
+            }
+
+            if (itemRoute == null) {
+              continue;
+            }
+
+            module.items.add(
+              SidebarItem(
+                textCode: item,
+                title: itemName!,
+                route: itemRoute,
+                icon: itemIcon!,
+              ),
+            );
+          }
+          break;
+        case 'modulo3':
+          module = SidebarGroup(
+            textCode: key,
+            title: 'Produtos',
+            icon: Icons.widgets_outlined,
+            items: [],
+          );
+
+          for (final item in json[key] ?? []) {
+            String? itemName;
+            String? itemRoute;
+            IconData? itemIcon;
+
+            switch (item) {
               case 'product':
                 itemName = 'Produto';
                 itemRoute = '/product';
-                itemIcon = Icons.manage_accounts_rounded;
+                itemIcon = Icons.inventory_2;
                 break;
               case 'category':
                 itemName = 'Categoria';
                 itemRoute = '/category';
-                itemIcon = Icons.manage_accounts_rounded;
+                itemIcon = Icons.category;
                 break;
             }
 

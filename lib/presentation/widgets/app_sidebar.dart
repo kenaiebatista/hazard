@@ -14,7 +14,9 @@ String _groupTitle(AppLocalizations l10n, String textCode) {
     case 'modulo1':
       return l10n.sidebarModuleWarehouse;
     case 'modulo2':
-      return l10n.sidebarModuleCategory;
+      return l10n.sidebarModuleStock;
+    case 'modulo3':
+      return l10n.sidebarModuleProduct;
     default:
       return textCode;
   }

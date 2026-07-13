@@ -209,7 +209,9 @@ class _WarehouseRightsideWidgetState extends State<WarehouseRightsideWidget> {
                           onPressed: _searchCep,
                         ),
                   validator: (value) {
-                    if (value == null || value.trim().length != 8) {
+                    if (value != null &&
+                        value.trim().isNotEmpty &&
+                        value.trim().length != 8) {
                       return l10n.warehouseValidatorCepInvalid;
                     }
                     return null;

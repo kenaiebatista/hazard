@@ -38,7 +38,8 @@
   "warehouseManageTitle": "Manage Warehouse",
 
   "sidebarModuleWarehouse": "Warehouse",
-  "sidebarModuleCategory": "Category",
+  "sidebarModuleStock": "Stock",
+  "sidebarModuleProduct": "Products",
 
   "categoryTitle": "Category",
   "categoryEmpty": "No categories registered.",

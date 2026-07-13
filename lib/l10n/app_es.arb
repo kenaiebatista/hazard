@@ -38,7 +38,8 @@
   "warehouseManageTitle": "Gestionar Almacén",
 
   "sidebarModuleWarehouse": "Almacén",
-  "sidebarModuleCategory": "Categoría",
+  "sidebarModuleStock": "Inventario",
+  "sidebarModuleProduct": "Productos",
 
   "categoryTitle": "Categoría",
   "categoryEmpty": "No hay categorías registradas.",
