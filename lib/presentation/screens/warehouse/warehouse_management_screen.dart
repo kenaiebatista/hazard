@@ -5,9 +5,9 @@ import 'package:hazard/presentation/providers/dashboard_provider.dart';
 import 'package:hazard/presentation/widgets/app_appbar.dart';
 import 'package:hazard/presentation/widgets/charts/category_stock_chart.dart';
 import 'package:hazard/presentation/widgets/charts/movement_chart.dart';
+import 'package:hazard/presentation/widgets/charts/recent_movements_chart.dart';
 import 'package:hazard/presentation/widgets/charts/warehouse_chart.dart';
 import 'package:hazard/presentation/widgets/dashboard_card_widget.dart';
-import 'package:hazard/presentation/widgets/recent_movements_widget.dart';
 import 'package:provider/provider.dart';
 
 class WarehouseManagementScreen extends StatelessWidget {
@@ -105,7 +105,7 @@ class _WarehouseDashboardState extends State<WarehouseDashboard> {
     final chartsSection = isMobile
         ? Column(
             children: [
-              RecentMovementsWidget(),
+              RecentMovementsChart(),
               const SizedBox(height: 20),
               MovementChart(),
               const SizedBox(height: 20),
@@ -118,7 +118,7 @@ class _WarehouseDashboardState extends State<WarehouseDashboard> {
             children: [
               Row(
                 children: [
-                  Expanded(child: RecentMovementsWidget()),
+                  Expanded(child: RecentMovementsChart()),
                   const SizedBox(width: 20),
                   Expanded(child: MovementChart()),
                 ],

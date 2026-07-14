@@ -163,11 +163,24 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             );
                           }
 
+                          const cardBorderRadius = BorderRadius.all(
+                            Radius.circular(12),
+                          );
+                          const cardShape = RoundedRectangleBorder(
+                            borderRadius: cardBorderRadius,
+                          );
+
                           return Card(
                             margin: const EdgeInsets.all(8),
+                            shape: cardShape,
+                            clipBehavior: Clip.antiAlias,
                             child: ExpansionTile(
-                              leading: const IconSquareWidget(
-                                icon: Icons.category_outlined,
+                              shape: cardShape,
+                              collapsedShape: cardShape,
+                              leading: Container( decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                                child: const IconSquareWidget(
+                                  icon: Icons.category_outlined,
+                                ),
                               ),
                               title: Row(
                                 children: [
@@ -188,31 +201,38 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                   category.subcategories.length,
                                 ),
                               ),
-                              children: category.subcategories.isEmpty
-                                  ? [
-                                      Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: Text(
-                                          l10n.categoryNoSubcategoryRegistered,
-                                          style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 12,
+                              children: [
+                                Divider(
+                                  color: Colors.grey.shade300,
+                                  height: 1,
+                                  thickness: 1,
+                                ),
+                                ...category.subcategories.isEmpty
+                                    ? [
+                                        Padding(
+                                          padding: const EdgeInsets.all(12.0),
+                                          child: Text(
+                                            l10n.categoryNoSubcategoryRegistered,
+                                            style: const TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 12,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ]
-                                  : category.subcategories
-                                        .map(
-                                          (subcategory) => ListTile(
-                                            dense: true,
-                                            leading: const Icon(
-                                              Icons.subdirectory_arrow_right,
-                                              size: 18,
+                                      ]
+                                    : category.subcategories
+                                          .map(
+                                            (subcategory) => ListTile(
+                                              dense: true,
+                                              leading: const Icon(
+                                                Icons.subdirectory_arrow_right,
+                                                size: 18,
+                                              ),
+                                              title: Text(subcategory.name),
                                             ),
-                                            title: Text(subcategory.name),
-                                          ),
-                                        )
-                                        .toList(),
+                                          )
+                                          .toList(),
+                              ],
                             ),
                           );
                         },

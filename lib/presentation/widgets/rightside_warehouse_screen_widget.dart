@@ -321,8 +321,12 @@ class _WarehouseRightsideWidgetState extends State<WarehouseRightsideWidget> {
                   controller: _capacityController,
                   isMandatory: true,
                   keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   validator: (value) {
-                    if (value == null || int.tryParse(value.trim()) == null) {
+                    final parsed = value == null
+                        ? null
+                        : int.tryParse(value.trim());
+                    if (parsed == null || parsed < 0) {
                       return l10n.warehouseValidatorCapacityRequired;
                     }
                     return null;

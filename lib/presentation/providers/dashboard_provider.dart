@@ -10,6 +10,7 @@ import 'package:hazard/domain/usecases/get_all_product_usecase.dart';
 import 'package:hazard/domain/usecases/get_all_warehouse_usecase.dart';
 import 'package:hazard/presentation/models/category_stock_chart_data.dart';
 import 'package:hazard/presentation/models/movement_chart_data.dart';
+import 'package:hazard/presentation/models/recent_movement_chart_data.dart';
 import 'package:hazard/presentation/models/warehouse_chart_data.dart';
 
 class DashboardProvider extends ChangeNotifier {
@@ -105,6 +106,21 @@ class DashboardProvider extends ChangeNotifier {
     final sorted = _movements.toList()
       ..sort((a, b) => b.movementDate.compareTo(a.movementDate));
     return sorted.take(limit).toList();
+  }
+
+  List<RecentMovementChartData> recentMovementsChartData({int limit = 6}) {
+    final movements = recentMovements(limit: limit).reversed;
+
+    return [
+      for (final movement in movements)
+        RecentMovementChartData(
+          label: movement.product.name,
+          signedQuantity: movement.type == MovementType.entry
+              ? movement.quantity
+              : -movement.quantity,
+          isEntry: movement.type == MovementType.entry,
+        ),
+    ];
   }
 
   List<ProductEntity> productsForWarehouse(String warehouseId) {
