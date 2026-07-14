@@ -7,7 +7,7 @@ class AppTheme {
     scaffoldBackgroundColor: AppColors.background,
     cardColor: Colors.white,
     appBarTheme: const AppBarTheme(backgroundColor: AppColors.background),
-    primaryColor: Color(-15658620),
+    primaryColor: AppColors.sidebarGroup,
   );
 
   static ThemeData get darkTheme => ThemeData(
@@ -15,6 +15,6 @@ class AppTheme {
     scaffoldBackgroundColor: const Color(0xFF121212),
     cardColor: const Color(0xFF1E1E1E),
     appBarTheme: const AppBarTheme(backgroundColor: Color(0xFF1A1A1A)),
-    primaryColor: Colors.lightBlueAccent,
+    primaryColor: Colors.lightBlueAccent.shade400,
   );
 }

@@ -6,6 +6,7 @@ import 'package:hazard/domain/entities/sidebar_group_entity.dart';
 import 'package:hazard/domain/entities/sidebar_item_entity.dart';
 import 'package:hazard/l10n/app_localizations.dart';
 import 'package:hazard/presentation/providers/auth_provider.dart';
+import 'package:hazard/presentation/providers/settings_provider.dart';
 import 'package:hazard/presentation/providers/sidebar_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -22,12 +23,26 @@ String _groupTitle(AppLocalizations l10n, String textCode) {
   }
 }
 
-// The sidebar always has a dark background, in both the light and dark app
-// themes, so its accent must stay legible against dark navy even when
-// Theme.primaryColor itself is a dark color (as it is in the light theme).
+// The sidebar always sits on a dark surface, in both app themes, so its
+// foreground stays white throughout.
+bool _isDarkMode(BuildContext context) =>
+    Theme.of(context).brightness == Brightness.dark;
+
+Color _sidebarBackgroundColor(BuildContext context) =>
+    _isDarkMode(context)
+        ? Colors.white.withValues(alpha: 0.06)
+        : AppColors.sidebar;
+
+Color _sidebarGroupBackgroundColor(BuildContext context) =>
+    _isDarkMode(context)
+        ? Colors.white.withValues(alpha: 0.06)
+        : AppColors.sidebarGroup;
+
+Color _sidebarForegroundColor(BuildContext context) => Colors.white;
+
 Color _sidebarAccentColor(BuildContext context) {
   final theme = Theme.of(context);
-  return theme.brightness == Brightness.dark
+  return _isDarkMode(context)
       ? theme.primaryColor
       : AppColors.sidebarAccentLight;
 }
@@ -82,6 +97,7 @@ class _SideBarState extends State<SideBar> {
 
     if (confirmed == true && context.mounted) {
       context.read<AuthProvider>().logout();
+      context.read<SettingsProvider>().setDarkMode(false);
       context.go('/login');
     }
   }
@@ -93,7 +109,10 @@ class _SideBarState extends State<SideBar> {
         onTap: () => _handleLogout(context),
         child: Padding(
           padding: const EdgeInsets.all(12),
-          child: Icon(Icons.transit_enterexit, color: Colors.white),
+          child: Icon(
+            Icons.transit_enterexit,
+            color: _sidebarForegroundColor(context),
+          ),
         ),
       ),
     );
@@ -101,10 +120,7 @@ class _SideBarState extends State<SideBar> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final sidebarColor = isDark
-        ? Theme.of(context).cardColor
-        : AppColors.sidebar;
+    final sidebarColor = _sidebarBackgroundColor(context);
     final isMobile = context.isMobile;
 
     return ChangeNotifierProvider(
@@ -173,7 +189,7 @@ class _SideBarState extends State<SideBar> {
                                 size: 18,
                                 color: state.pinned
                                     ? _sidebarAccentColor(context)
-                                    : Colors.white,
+                                    : _sidebarForegroundColor(context),
                               ),
                             ),
                           ),
@@ -184,7 +200,9 @@ class _SideBarState extends State<SideBar> {
                   Divider(
                     height: 1,
                     thickness: 1,
-                    color: Colors.white.withValues(alpha: 0.12),
+                    color: _sidebarForegroundColor(
+                      context,
+                    ).withValues(alpha: 0.12),
                   ),
                   const SizedBox(height: 4),
                   for (final module in state.modules)
@@ -222,10 +240,8 @@ class _SidebarGroupWidgetState extends State<SidebarGroupWidget> {
         state.modulesExpanded[widget.module.textCode] ?? isGroupActive;
     final sidebarCollapsed = !state.expanded;
     final accentColor = _sidebarAccentColor(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final groupColor = isDark
-        ? Theme.of(context).cardColor
-        : AppColors.sidebarGroup;
+    final groupColor = _sidebarGroupBackgroundColor(context);
+    final foregroundColor = _sidebarForegroundColor(context);
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -238,7 +254,7 @@ class _SidebarGroupWidgetState extends State<SidebarGroupWidget> {
           color: groupColor,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: Colors.white.withValues(alpha: 0.06),
+            color: foregroundColor.withValues(alpha: 0.06),
             width: 1,
           ),
         ),
@@ -256,8 +272,8 @@ class _SidebarGroupWidgetState extends State<SidebarGroupWidget> {
                 child: InkWell(
                   onTap: () =>
                       state.changeExpandedModule(widget.module.textCode),
-                  splashColor: Colors.white.withValues(alpha: 0.15),
-                  highlightColor: Colors.white.withValues(alpha: 0.08),
+                  splashColor: foregroundColor.withValues(alpha: 0.15),
+                  highlightColor: foregroundColor.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(6),
                   child: Padding(
                     padding: EdgeInsets.symmetric(
@@ -272,7 +288,7 @@ class _SidebarGroupWidgetState extends State<SidebarGroupWidget> {
                       children: [
                         Icon(
                           widget.module.icon,
-                          color: isGroupActive ? accentColor : Colors.white,
+                          color: isGroupActive ? accentColor : foregroundColor,
                         ),
                         if (state.expanded) ...[
                           const SizedBox(width: 8),
@@ -286,7 +302,7 @@ class _SidebarGroupWidgetState extends State<SidebarGroupWidget> {
                               style: TextStyle(
                                 color: isGroupActive
                                     ? accentColor
-                                    : Colors.white,
+                                    : foregroundColor,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -297,7 +313,9 @@ class _SidebarGroupWidgetState extends State<SidebarGroupWidget> {
                             curve: Curves.easeInOut,
                             child: Icon(
                               Icons.chevron_right,
-                              color: isGroupActive ? accentColor : Colors.white,
+                              color: isGroupActive
+                                  ? accentColor
+                                  : foregroundColor,
                               size: 16,
                             ),
                           ),
@@ -319,7 +337,7 @@ class _SidebarGroupWidgetState extends State<SidebarGroupWidget> {
                               Divider(
                                 height: 1,
                                 thickness: 1,
-                                color: Colors.white.withValues(alpha: 0.12),
+                                color: foregroundColor.withValues(alpha: 0.12),
                               ),
                               const SizedBox(height: 4),
                             ],
@@ -357,13 +375,9 @@ class _SidebarItemWidgetState extends State<SidebarItemWidget> {
     final currentLocation = GoRouterState.of(context).matchedLocation;
     final isActive = currentLocation == widget.item.route;
     final accentColor = _sidebarAccentColor(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final selectionColor = isDark
-        ? Colors.white.withValues(alpha: 0.14)
-        : accentColor.withValues(alpha: 0.2);
-    final selectionBorderColor = isDark
-        ? Colors.white.withValues(alpha: 0.24)
-        : accentColor.withValues(alpha: 0.4);
+    final foregroundColor = _sidebarForegroundColor(context);
+    final selectionColor = accentColor.withValues(alpha: 0.2);
+    final selectionBorderColor = accentColor.withValues(alpha: 0.4);
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
@@ -391,7 +405,7 @@ class _SidebarItemWidgetState extends State<SidebarItemWidget> {
             children: [
               Icon(
                 widget.item.icon,
-                color: isActive ? accentColor : Colors.white,
+                color: isActive ? accentColor : foregroundColor,
               ),
               if (state.expanded)
                 Flexible(
@@ -402,7 +416,7 @@ class _SidebarItemWidgetState extends State<SidebarItemWidget> {
                     ),
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: isActive ? accentColor : Colors.white,
+                      color: isActive ? accentColor : foregroundColor,
                       fontWeight: isActive
                           ? FontWeight.w600
                           : FontWeight.normal,
@@ -416,38 +430,3 @@ class _SidebarItemWidgetState extends State<SidebarItemWidget> {
     );
   }
 }
-
-// class _SideBarState extends State<SideBar> {
-//   @override
-//   Widget build(BuildContext context) {
-//   return Container(
-//       color: AppColors.sidebar,
-//       width: 280,
-//       child: NavigationView(
-//         pane: NavigationPane(
-//           displayMode: PaneDisplayMode.expanded,
-//           selected: 0,
-//           items: SidebarMenu.groups.map((group) {
-//             return PaneItemExpander(
-//               icon: Icon(group.icon),
-//               title: Text(group.title),
-//               body: const SizedBox(),
-//
-//               items: group.items.map((item) {
-//                 return PaneItem(
-//                   icon: Icon(item.icon),
-//                   title: Text(item.title),
-//                   body: const SizedBox(),
-//
-//                   onTap: () {
-//                     context.go(item.route);
-//                   },
-//                 );
-//               }).toList(),
-//             );
-//           }).toList(),
-//         ),
-//       ),
-//     );
-//   }
-// }

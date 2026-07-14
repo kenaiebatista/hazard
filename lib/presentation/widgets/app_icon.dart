@@ -14,7 +14,7 @@ class MainIcon extends StatelessWidget {
       width: 38,
       child: Center(
         child: Text(
-          'P',
+          'S',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,

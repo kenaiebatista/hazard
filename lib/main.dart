@@ -143,7 +143,7 @@ class Hazard extends StatelessWidget {
       child: Consumer<SettingsProvider>(
         builder: (context, settings, _) {
           return MaterialApp.router(
-            title: 'Hazard',
+            title: 'StockFlow',
             debugShowCheckedModeBanner: false,
             routerConfig: router,
             theme: AppTheme.theme,

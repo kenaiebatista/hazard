@@ -103,34 +103,42 @@ class CardFormState extends State<CardForm> {
                       Align(alignment: Alignment.centerLeft, child: MainIcon()),
                       Padding(
                         padding: const EdgeInsets.only(left: 8),
-                        child: (!isRegistering)
-                            ? AnimatedOpacity(
-                                opacity: isRegistering ? 0.0 : 1.0,
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeInOut,
-                                child: Text(
-                                  l10n.loginWelcome,
-                                  style: const TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              )
-                            : AnimatedOpacity(
-                                opacity: isRegistering ? 1.0 : 0.0,
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeInOut,
-                                child: Text(
-                                  l10n.loginRegisterTitle,
-                                  style: const TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
+                        child: Text(
+                          'StockFlow',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
                       ),
                     ],
                   ),
+                  (!isRegistering)
+                      ? AnimatedOpacity(
+                          opacity: isRegistering ? 0.0 : 1.0,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          child: Text(
+                            l10n.loginWelcome,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        )
+                      : AnimatedOpacity(
+                          opacity: isRegistering ? 1.0 : 0.0,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          child: Text(
+                            l10n.loginRegisterTitle,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
                   AnimatedCrossFade(
                     duration: const Duration(milliseconds: 450),
                     firstCurve: Curves.easeInOut,
