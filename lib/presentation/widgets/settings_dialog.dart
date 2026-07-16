@@ -10,6 +10,7 @@ class SettingsDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = context.watch<SettingsProvider>();
     final l10n = AppLocalizations.of(context);
+    final accentColor = Theme.of(context).primaryColor;
 
     return Dialog(
       child: ConstrainedBox(
@@ -53,16 +54,19 @@ class SettingsDialog extends StatelessWidget {
                       contentPadding: EdgeInsets.zero,
                       title: Text(l10n.settingsLanguagePortuguese),
                       value: const Locale('pt'),
+                      activeColor: accentColor,
                     ),
                     RadioListTile<Locale>(
                       contentPadding: EdgeInsets.zero,
                       title: Text(l10n.settingsLanguageEnglish),
                       value: const Locale('en'),
+                      activeColor: accentColor,
                     ),
                     RadioListTile<Locale>(
                       contentPadding: EdgeInsets.zero,
                       title: Text(l10n.settingsLanguageSpanish),
                       value: const Locale('es'),
+                      activeColor: accentColor,
                     ),
                   ],
                 ),
@@ -79,6 +83,7 @@ class SettingsDialog extends StatelessWidget {
                   Switch(
                     value: settings.isDarkMode,
                     onChanged: settings.setDarkMode,
+                    activeThumbColor: accentColor,
                   ),
                 ],
               ),

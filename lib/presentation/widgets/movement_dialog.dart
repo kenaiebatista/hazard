@@ -420,6 +420,7 @@ class _MovementFormState extends State<_MovementForm> {
                       contentPadding: EdgeInsets.zero,
                       title: Text(l10n.movementTypeEntry),
                       value: MovementType.entry,
+                      activeColor: Theme.of(context).primaryColor,
                     ),
                   ),
                   Expanded(
@@ -427,6 +428,7 @@ class _MovementFormState extends State<_MovementForm> {
                       contentPadding: EdgeInsets.zero,
                       title: Text(l10n.movementTypeExit),
                       value: MovementType.exit,
+                      activeColor: Theme.of(context).primaryColor,
                     ),
                   ),
                 ],
